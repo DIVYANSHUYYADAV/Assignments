@@ -1,0 +1,58 @@
+CSS part-
+th,td{
+    border: 2px;
+    border-radius: 10px;
+    background-color:#96D4D4;
+    border-color: black;
+    border-style: outset;
+}
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+Html-Body
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<link rel="stylesheet" href="htcs.css">
+</head>
+<body>
+    <table>
+<tr>
+<th>Branch</th>
+<th>Name</th>
+<th>Prn</th>
+</tr>
+<tr>
+    <td>Dac</td>
+    <td>Divyanshu Yadav</td>
+    <td>0024</td>
+</tr>
+<tr>
+<td>Dac</td>
+<td>Mayur Patil</td>
+<td>0042</td>
+</tr>
+<tr>
+<td>Dbda</td>
+<td>Vaibhav Nagar</td>
+<td>0067</td>
+
+</tr>
+<tr>
+    <td>Dbda</td>
+    <td>Abhijeet Singh</td>
+    <td>0019</td>
+    
+</tr>
+<tr>
+    <td>Desd</td>
+    <td>Lokesh Gupta</td>
+    <td>0032</td>
+    
+</tr>
+
+    </table>
+</body>
+</html>
