@@ -1,0 +1,49 @@
+Ques-1 - Array of Instance
+
+import java.util.*;
+interface Course{
+	void start();
+}
+class Dac implements Course{
+	public void start() {
+		System.out.println("We are going to Start Dac Course");
+	}
+}
+class PgDbda implements Course{
+	public void start() {
+		System.out.println("We are going to Start PgDbda Course");
+	}
+}
+class MSCIT implements Course{
+	public void start() {
+		System.out.println("We are going to Start MSCIT Course");
+	}
+}
+public class CourseDemo {
+
+	public static void main(String[] args) {
+Course arr[] = new Course[3];
+arr[0]= new Dac();
+arr[1] = new PgDbda();
+arr[2] = new MSCIT();
+for(int i=0;i<arr.length;i++) {
+	arr[i].start();
+}
+	
+
+}
+}
+Ques-2Pattern Problem
+
+public class Pattern1 {
+
+	public static void main(String[] args) {
+for(int i=4;i>=1;i--) {
+	for(int j=1;j<=i;j++) {
+		System.out.print(j);
+	}
+	System.out.println();
+}
+	}
+
+}
