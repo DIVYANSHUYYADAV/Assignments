@@ -1,0 +1,164 @@
+Day 3
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Schema;
+
+namespace ConsoleApp22
+{
+    class student
+    {
+        private String name;
+        private int maths;
+        private int science;
+        private int eng;
+        private  int toatal;
+        public student(String name,int maths,int science,int eng)
+        {
+            this.name = name;   
+            this.maths = maths;     
+            this.science = science; 
+                this.eng = eng;     
+           toatal=maths+science+eng;
+        }
+        public  String display()
+        {
+            if (toatal >= 300) {
+                throw new Exception("enter correct data");
+            }
+            else
+            return string.Format("name is {0}  toatal marks out of 300 is{1}",name,toatal);
+        }
+    
+    }
+class Program
+    {
+        static void Main(string[] args)
+        {
+            student s1 = new student("Ankur", 78, 90, 46);
+            student s2 = new student("Ashmita", 83, 91, 78);
+            student s3 = new student("Ayush", 67, 45, 87);
+            Console.WriteLine(s1.display());
+            Console.WriteLine(s2.display());
+            Console.WriteLine(s3.display());
+
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------------------------
+using System;
+namespace console1
+{
+    class Account
+    {
+        private string name;
+        private int id;
+        static int epid;
+        private double balance;
+
+        public Account(string name, double balance)
+        {
+            this.name = name;
+            this.id =++epid ;
+            this.balance = balance;
+        }
+        public void deposit(int amt)
+        {
+            if (amt == 0)
+            {
+                Console.WriteLine("Enter a valid amount");
+            }
+            else
+            {
+                balance += amt;
+                Console.WriteLine("Amount deposited {0}", amt);
+            }
+        }
+        public void withdraw(int amt)
+        {
+            if (amt > balance)
+            {
+                throw new Exception("Not enough amount to withdraw");
+            }
+            else
+            {
+                balance -= amt;
+            }
+        }
+        public string display()
+        {
+            return string.Format("name is {0} id is {1} Total Balance is {2}", name,id, balance);
+        }
+
+    }
+    class Subs
+    {
+        static void Main(string[] args) {
+            Account a1 = new Account("Divyanshu", 5000);
+            a1.deposit(2000);
+            a1.withdraw(2700);
+            Console.WriteLine(a1.display());
+            Account a2 = new Account("Monish", 9000);
+            a2.deposit(5000);
+            a2.withdraw(12700);
+            Console.WriteLine(a2.display());
+        }
+    }
+
+
+
+}
+---------------------------------------------------------------------------------------------------------------------------
+Quest-3
+
+using System;
+
+namespace ConsoleApp2
+{
+    public class Employee
+    {
+        private int id;
+        private string name;
+        private double salary;
+        private double netsalary;
+        static int epid;
+        public Employee(String name,double salary) { 
+        this.name = name;
+            this.salary = salary;
+            this.id = ++epid;
+            Calculatesal();
+        
+        }
+
+        private void Calculatesal()
+        {
+            netsalary = salary - (salary * 0.1);
+            
+        }
+        
+        public override string ToString()
+        {
+            return $"Name: {name} id: {id} NetSalary: {netsalary}";
+        }
+    }
+}
+
+
+using System;
+
+namespace ConsoleApp2
+{
+     class EmpNetMain
+    {
+      
+        public static void Main(string[] args)
+        {
+            Employee e1 = new Employee("Divyanshu",6000);
+            Employee e2 = new Employee("Parag", 7000);
+            Employee e3 = new Employee("Shiv", 6500);
+            Console.WriteLine(e1); Console.WriteLine(e2); Console.WriteLine(e3);
+        }
+    }
+}

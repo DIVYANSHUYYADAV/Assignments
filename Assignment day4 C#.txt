@@ -1,0 +1,147 @@
+Assignment day4 C#
+
+QUES-1
+using System;
+using System.ComponentModel;
+
+namespace ConsoleApp3
+{
+    class Account1
+    {
+        static int id;
+        private string name;
+        private static double balance;
+        static float intrs_rate = 0.07f;
+        const float minbal = 1000f;
+        public String Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+        static Account1()
+        {
+            Console.WriteLine("Bank of Divyanshu");
+        }
+        public double Balance
+        {
+            get { return balance; }
+            set {
+                if (value == 0)
+                {
+                    throw new Exception("Cant open account with 0 balance");
+                }
+                else
+                {
+                    id = ++id;
+                    balance = value;
+                }
+            }
+        }
+        public void deposit(double amt)
+        {
+            if (amt == 0)
+            {
+                throw new Exception("enter a valid amount to deposit");
+            }
+            else
+            {
+                balance += amt;
+                Console.WriteLine("New balance after deposit is {0}", balance);
+            }
+        }
+        public void withdraw(double amt)
+        {
+            double d1 = balance - amt;
+            if (d1< minbal)
+            {
+                throw new Exception("less amount in your account");
+            }
+            else
+            if(amt==0){
+                Console.WriteLine("Enter a Valid amnt");
+            }
+            else
+            {
+                balance -= amt;
+                Console.WriteLine("Amount Debited {0} and New Balance is {1}", amt,balance);
+            }
+        }
+public static double intrst()
+        {
+            double b = balance * intrs_rate;
+            balance = b + balance;
+            return balance;
+            //Console.WriteLine("New Balance after adding intrst {0}", balance);
+        }
+       // double d1 = intrst();
+        public override string ToString()
+        {
+            return String.Format("Name ={0}  Balance={1}  Id={2}  AftrIntrst={3} ",name,balance,id,intrst());
+        }
+
+
+    }
+}
+    using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+     class Main1
+    {
+        static void Main(string[] args)
+        {
+            Account1 a1 = new Account1();
+            a1.Name = "Divyanshu";
+            try
+            {
+                a1.Balance = 6000;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            try
+            {
+                a1.deposit(2000);
+            }catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            try
+            {
+                a1.withdraw(2000);
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            Console.WriteLine(a1.ToString());
+        Account1 a2 = new Account1();
+            a2.Name = "Pearl";
+            try
+            {
+                a2.Balance = 2000;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            Console.WriteLine(a2.ToString());
+            try
+            {
+                a2.withdraw(1700);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+        }
+        
+    }
+}
+----------------------------------------------------------------------------------------------
