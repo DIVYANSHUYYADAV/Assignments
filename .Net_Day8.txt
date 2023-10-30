@@ -1,0 +1,225 @@
+.Net_Day8
+
+MemberClone
+
+using System;
+namespace ConsoleApp5
+{
+    class cklonable : ICloneable
+    {
+        public string Name { get; set; }
+        public int id { get; set; }
+        public cklonable(string name,int Id) {
+        
+        Name = name;
+           id = Id;
+        }
+        public override string ToString()
+        {
+              return $"Name is :{Name} Id is {id} ";
+            //return string.Format("Name is {0} id is {1}", Name,id );
+        }
+        public  object Clone()
+        {
+            return this.MemberwiseClone() ;
+        }
+    }
+}
+
+class Main1
+   {
+   static void Main(string[] args)
+       {
+           cklonable c1 = new cklonable("Divyanshu",1);
+           Console.WriteLine(c1.ToString());
+           cklonable c2 = null;
+           c2 = (cklonable)c1.Clone();
+           Console.WriteLine(c2.ToString());
+           c2.Name = "Manav";
+           c2.id = 2;
+           Console.WriteLine(c2.ToString());
+
+
+
+
+           }
+
+       }
+
+-----------------------------------------------------------------------------------------------
+using System;
+using System.Net.Http.Headers;
+
+namespace ConsoleApp5
+{
+    class cklonable : ICloneable
+    {
+       public New1 n1 = new New1("");
+        public string Name { get; set; }
+        public int id { get; set; }
+        public cklonable(string name,int Id,string branch) {
+            n1.branch=branch;
+        
+        Name = name;
+           id = Id;
+        }
+        public override string ToString()
+        {
+              return $"Name is :{Name} Id is {id} branch is {n1.branch} ";
+            //return string.Format("Name is {0} id is {1}", Name,id );
+        }
+        public  object Clone()
+        {
+            return this.MemberwiseClone() ;
+        }
+    }
+}
+
+class New1
+  {
+      public String branch;
+      public New1(string branch)
+      {
+          this.branch = branch;
+      }
+
+  }
+
+class Main1
+   {
+   static void Main(string[] args)
+       {
+           cklonable c1 = new cklonable("Divyanshu",1,"Dac");
+           Console.WriteLine(c1.ToString());
+           cklonable c2 = null;
+           c2 = (cklonable)c1.Clone();
+           Console.WriteLine(c2.ToString());
+           c2.Name = "Manav";
+           c2.id = 2;
+           c2.n1.branch="DBDA";
+           Console.WriteLine(c2.ToString());
+
+
+
+
+           }
+
+       }
+-------------------------------------------------------------------------------------------------------
+delegate example
+
+using System;
+namespace ConsoleApp5
+{
+    delegate void strMod(int a, int b);
+    class Program
+    {
+       
+        public  void add1(int a, int b)
+        {
+            int k = a + b;
+            Console.WriteLine("sum of"+a+"and"+b+" "+k);
+        }
+        public  void product(int a, int b) {
+            int k = a * b;
+            Console.WriteLine("Product of " + a + "and" + b+" " + k);
+        }
+    }
+}
+
+    class New1
+    {
+        Program p1 = new Program();
+        public  void call(int a , int b) 
+        {
+            strMod s1 = p1.add1;
+                
+            s1(a,b);
+            s1=p1.product;
+            s1(a,b);
+            
+        }
+
+    }
+
+ class Main1
+    {
+    static void Main(string[] args)
+        {
+            New1 n1 = new New1();
+            n1.call(10, 20);
+
+        }
+
+        }
+--------------------------------------------------------------------------------------------------
+using System;
+namespace ConsoleApp5
+{
+    delegate int strMod(int a, int b);
+    class Program
+    {
+       
+        public  int add1(int a, int b)
+        {
+            int k = a + b;
+            Console.WriteLine("sum of"+a+"and"+b+" "+k);
+            return k;
+        }
+        public  int product(int a, int b) {
+            int k = a * b;
+            Console.WriteLine("Product of " + a + "and" + b+" " + k);
+            return k;
+        }
+    }
+}
+    class New1
+    {
+        Program p1 = new Program();
+        public  void call(int a , int b) 
+        {
+            strMod s1 = p1.add1;
+                
+            //s1(a,b);
+           int r1 =  s1(a,b);
+            s1 += p1.product;
+            int r2 = s1(a,b);
+            Console.WriteLine("for add"+r1);
+            Console.WriteLine("for product"+r2);
+           /* foreach (strMod s in s1.GetInvocationList())
+            {
+                Console.WriteLine(r);
+            }  */         
+        }
+ }
+class Main1
+   {
+   static void Main(string[] args)
+       {
+           New1 n1 = new New1();
+           n1.call(10, 20);
+
+       }
+
+       }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
