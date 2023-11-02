@@ -1,0 +1,324 @@
+.Net_Day9
+
+User Defined Exception
+
+using System;
+namespace ConsoleApp5
+{
+    class Employee
+    {
+        public String Name { get; set; }
+        public double Salary {  get; set; }
+        public Employee(String name,double salary) {
+        this.Name = name;
+                this.Salary = salary;
+        }
+        public override string ToString()
+        {
+            return string.Format("Name {0} \n Salary {1}",Name,Salary);
+        }
+        public void increment(double amt)
+        {
+            if(amt > 10000) {
+                throw new myException(Name, Salary, "increment over 10000 is not allowed");
+            }
+            else 
+                if(amt < 1)
+            {
+                throw new Exception("Invalid amount");
+            }
+            else
+                Salary = Salary+amt;
+        }
+
+    }
+}
+
+public class myException:ApplicationException
+    {
+        readonly string nm;
+        readonly double sal;
+        public string smg;
+        public myException(string nm, double sal,string smg)
+        {
+            this.nm = nm;
+                this.sal = sal;
+                this.smg = smg;
+        }
+    }
+class Main1
+   {
+   static void Main(string[] args)
+       {
+           Employee e1 = new Employee("Divyanshu", 40000);
+           Employee e2 = new Employee("Manav", 35000);
+           Console.WriteLine(e1.ToString()); Console.WriteLine(e2.ToString());
+           try
+           {
+               e1.increment(10000);
+               e2.increment(12000);
+
+           }
+           catch (myException ex) {
+           Console.WriteLine(ex.smg);
+           }
+           catch(Exception ex) {
+           Console.WriteLine(ex.Message);
+           }
+
+       }
+
+       }
+------------------------------------------------------------------------------------------------------------------
+Generic Types
+
+using System;
+namespace ConsoleApp5
+{
+    class Gen<T>
+    {
+        T ob;
+        public Gen(T ob)
+        {
+            this.ob = ob;
+        }
+        public T GetGen()
+        {
+            return ob;
+        }
+        public void TypeofData()
+        {
+            Console.WriteLine(ob.GetType());
+        }
+    }
+}
+class Main1
+   {
+   static void Main(string[] args)
+       {
+           Gen<int> g1 = new Gen<int>(20);
+           Console.WriteLine(g1.GetGen());
+           Console.WriteLine(g1.GetType());
+           Gen<string> g2 = new Gen<string>("Divyanshu");
+           Console.WriteLine(g2.GetGen());
+           Console.WriteLine(g2.GetType());
+
+       }
+
+       }
+-----------------------------------------------------------------------------------------------------
+Using Generic to swap two numbers
+using System;
+namespace ConsoleApp5
+{
+    class Swap<T>
+    {
+        T ob1;
+        T ob2;
+        public Swap(T ob1, T ob2)
+        {
+            this.ob1 = ob1;
+                this.ob2 = ob2;
+        }
+        public void swapnum()
+        {
+            T temp;
+            temp = ob1;
+            ob1 = ob2;
+            ob2 = temp;
+        }
+        public override string ToString()
+        {
+            return string.Format("Object 1 is {0} Object 2 is {1}",ob1,ob2);
+        }
+    }
+}
+
+class Main1
+   {
+   static void Main(string[] args)
+       {
+           Swap<int> t1 = new Swap<int>(10, 20);
+           Console.WriteLine(t1.ToString());
+           t1.swapnum();
+           Console.WriteLine("After swapping"+t1.ToString());
+           Swap<string> t2 = new Swap<string>("Divyanshu", "Kanad");
+           Console.WriteLine(t2.ToString());
+           t2.swapnum();
+           Console.WriteLine("After swapping"+t2.ToString());
+           Swap<bool> t3 = new Swap<bool>(true, false);
+           Console.WriteLine(t3.ToString());
+           t3.swapnum();
+           Console.WriteLine("After swapping" + t3.ToString());
+
+       }
+
+       }
+---------------------------------------------------------------------------------------------
+creating Generic delegate
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp5
+{
+  public delegate void myOwn<T>(T obj);
+
+ class Main1
+    {
+        public static void upper(string arg)
+        {
+            Console.WriteLine("Converting String to uppercase "+arg.ToUpper());
+        }
+        public static void sqr(int a)
+        {
+            Console.WriteLine("Square of "+a+"is "+a*a);
+        }
+    static void Main(string[] args)
+        {
+            myOwn<int> o1 = new myOwn<int>(sqr);
+            o1(12);
+            myOwn<string> o2 = new myOwn<string>(upper);
+            o2("divyanshu");
+        }
+
+        }
+    
+    }
+
+----------------------------------------------------------------------------------------------------------
+To create a list
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp5
+{
+    class Main1
+    {
+        static void Main(string[] args)
+        {
+            List<char> list = new List<char>();
+            Console.WriteLine(list.Count+" "+list.Capacity);
+            list.Add('A');
+            list.Add('B');
+            list.Add('C');
+            list.Add('D');
+            list.Add('E');
+            list.Add('B');
+            Console.WriteLine(list.Count + " " + list.Capacity);
+            foreach (char c in list)
+            {
+                Console.WriteLine(c);
+            }
+            list.Remove('B');
+            list[3] = 'G';
+            foreach (char c in list)
+            {
+                Console.WriteLine(c);
+            }
+        }
+    }
+}
+----------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp5
+{
+    class Main1
+    {
+        static void Main(string[] args)
+        {
+           SortedList<string,double> s1 = new SortedList<string,double>();
+            s1.Add("Divyanshu", 70000);
+            s1.Add("Anurag", 67000);
+            s1.Add("Om", 45000);
+            s1.Add("Kundan", 89000);
+            s1.Add("Manav", 66000);
+            s1.Add("Lakshya", 80000);
+            ICollection<string> i = s1.Keys;//it will store all the keys
+            foreach(KeyValuePair<string,double> kvp in s1)
+            {
+                Console.WriteLine(kvp);
+            }
+            try
+            {
+                s1.Add("Om", 6000);
+            }
+            catch(ArgumentException)
+            {
+                Console.WriteLine("An element with key= \"Om\" Already exist");
+            }
+            s1.Remove("Manav");
+            s1["Kundan"] = 90000;
+            Console.WriteLine();
+            Console.WriteLine();
+            foreach(KeyValuePair<string,double> kvp in s1)
+            {
+                Console.WriteLine(kvp);
+            }
+              double d;
+           if(s1.TryGetValue("Anurag",out d)){
+                Console.WriteLine(d);
+             }
+           Console.WriteLine(s1.ContainsKey("Divyanshu"));//will return true if the key is present
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------------
+// Demonstrate the generic SortedDictionary<TK, TV> class. 
+using System;
+using System.Collections.Generic;
+
+class GenSortedDictionaryDemo
+{
+    static void Main()
+    {
+        // Create a Dictionary that holds employee 
+        // names and their corresponding salaries. 
+        SortedDictionary<string, double> dict =
+          new SortedDictionary<string, double>();
+
+        // Add elements to the collection. 
+        dict. Add("Butler", 73000);
+ 	dict.Add("Sanoj", 59000);
+ 	dict.Add("Piku", 45000);
+ 	dict.Add("Frank", 99000); 
+// Get a collection of the keys (names). 
+        ICollection<string> c = dict.Keys;
+
+        // Use the keys to obtain the values (salares). 
+        foreach (string str in c)
+     Console.WriteLine("{0}, Salary: {1:C}", str, dict[str]);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
