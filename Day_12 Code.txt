@@ -1,0 +1,179 @@
+Day_12 Code
+
+quest-.Create a table employee with a column id name salary enter the record using sql connection class connect to the database and display record
+
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6
+{
+    public class Employee
+    {
+        private string _connectionString;
+        public Employee(IConfiguration iconfiguration)
+        {
+            _connectionString = iconfiguration.GetConnectionString("Default");
+        }
+
+        public  void detail() { 
+        using(SqlConnection con = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("Select * from Employee", con);
+                con.Open();
+                Console.WriteLine("Connected");
+                SqlDataReader dr = cmd.ExecuteReader();
+                if(dr.HasRows)
+                {
+                    while(dr.Read())
+                    {
+                        Console.WriteLine("{0} {1} {2}", dr["Id"], dr["Name"], dr["Salary"]);
+                    }
+                }
+            }        
+        }
+
+    }
+}
+
+
+{
+  "ConnectionStrings": {
+    "Default": "Data Source=(localdb)\\ProjectModels;Initial Catalog=Divyanshu_data;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+  }
+
+}
+
+using Microsoft.Extensions.Configuration;
+
+namespace ConsoleApp6
+{
+  class Program
+    {
+        private static IConfiguration _iconfriguation;
+        static void Main(string[] args)
+        {
+            GetAppSettingsFile();
+            PrintEmployee();
+        }
+        static void GetAppSettingsFile()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("jsconfig1.json", optional: false, reloadOnChange: true);
+                _iconfriguation = builder.Build();
+        }
+        static void PrintEmployee()
+        {
+            Employee obj = new Employee(_iconfriguation);
+            obj.detail();
+        }
+
+    }
+}
+---------------------------------------------------------------------------------
+creat a table coustmer with column
+Id,name,Address,mobile
+
+1)display all records
+2)insert new cousttemer
+3)update coustemer name where id =1
+4)Dlete record where id=3
+
+
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Data.SqlClient;
+
+namespace ConsoleApp6
+{
+    public class Employee
+    {
+        private string _connectionString;
+        public Employee(IConfiguration iconfriguation) {
+            _connectionString = iconfriguation.GetConnectionString("Default");
+        
+        }
+        public void Employeedetail()
+        {
+            using(SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("Select * from Employee",conn);
+                conn.Open();
+                Console.WriteLine("Connected");
+                SqlDataReader reader = cmd.ExecuteReader();
+                if(reader.HasRows)
+                {
+                    while(reader.Read())
+                    {
+                        Console.WriteLine("{0} {1} {2} {3}", reader["Id"], reader["Name"], reader["Address"], reader["Mobile"]);
+                    }
+                }
+            }
+        }
+        public void insert()
+        {
+            using(SqlConnection con = new SqlConnection(_connectionString))
+            {
+                SqlCommand insert = new SqlCommand("Insert into Employee values('Mridul','Patna','9867345611')",con);
+            con.Open();
+                SqlDataReader reader = insert.ExecuteReader();
+            }
+        }
+    public void Update()
+        {
+            using(SqlConnection con1 = new SqlConnection(_connectionString))
+            {
+                SqlCommand update = new SqlCommand("update Employee set Name='Ishwak' where id='3'", con1);
+                con1.Open();
+                SqlDataReader reader = update.ExecuteReader();
+            }
+        }
+        public void delete()
+        {
+            using(SqlConnection con2 = new SqlConnection(_connectionString))
+            {
+                SqlCommand delete = new SqlCommand("Delete from Employee where Name='Kunal'",con2);
+                con2.Open();
+                SqlDataReader reader = delete.ExecuteReader();
+            }
+        }
+    
+    
+    }
+
+}
+
+using Microsoft.Extensions.Configuration;
+using System;
+namespace ConsoleApp6
+{
+    class Program
+    {
+        private static IConfiguration _iconfriguation;
+        static void GetAppSettingsFile()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("jsconfig1.json", optional: true);
+                _iconfriguation = builder.Build(); ;
+                }
+        static void PrintEmployee()
+        {
+            Employee obj = new Employee(_iconfriguation);
+            obj.Employeedetail();
+            obj.insert();
+            obj.delete();
+            obj.Update();
+        }
+        static void Main(string[] args)
+        {
+            GetAppSettingsFile();
+            PrintEmployee();
+        }
+    }
+}

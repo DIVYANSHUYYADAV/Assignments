@@ -1,0 +1,91 @@
+Day 5 C#
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    class Day5
+    {
+        static void Main(string[] args)
+        {
+            String a = "Divyanshu";
+            String b = "Divyanshu";
+            Console.WriteLine(a); Console.WriteLine(b);
+            Console.WriteLine(a == b);
+            Console.WriteLine(a.Equals(b));
+            Console.WriteLine(Object.Equals(a,b));
+            Console.WriteLine(  Object.ReferenceEquals(a,b));
+            Console.WriteLine(a.GetHashCode());
+            Console.WriteLine(b.GetHashCode());
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------------
+
+using System;
+namespace ConsoleApp3
+{
+    class Day5
+    {
+        static void Main(string[] args)
+        {
+            String a = "DIVYANSHU";
+            String b= a.ToUpper();
+            Console.WriteLine(a);
+            Console.WriteLine(b);
+            Console.WriteLine(a==b);
+            Console.WriteLine(Object.Equals(a,b));
+            Console.WriteLine(a.Equals(b));
+            Console.WriteLine(Object.ReferenceEquals(a,b));
+            Console.WriteLine(a.GetHashCode());
+            Console.WriteLine(b.GetHashCode());
+
+        }
+    }
+
+
+}
+------------------------------------------------------------------------------------------------------------
+using System;
+namespace ConsoleApp3
+{
+    class Day5
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Enter first String");
+            String a = Console.ReadLine();
+            Console.WriteLine("Enter Second String");
+            String b = Console.ReadLine();
+            Console.WriteLine(a);
+            Console.WriteLine(b);
+            Console.WriteLine(a == b);
+            Console.WriteLine(Object.Equals(a,b));
+            Console.WriteLine(Object.ReferenceEquals(a,b));
+            Console.WriteLine(a.GetHashCode());
+            Console.WriteLine(b.GetHashCode());
+
+
+        }
+    }
+
+
+}
+
+O\P
+Enter first String
+divyanshu
+Enter Second String
+divyanshu
+divyanshu
+divyanshu
+True
+True
+False
+-1341415596
+-1341415596
+-----------------------------------------------------------------------------------------------------------------

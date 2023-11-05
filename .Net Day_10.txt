@@ -1,0 +1,272 @@
+.Net Day_10
+
+Anonymous types
+
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp5
+{
+    class Main1
+    {
+        public static void print(Object obj)
+        {
+            Console.WriteLine(obj.ToString());
+            Console.WriteLine(obj.GetType());
+            Console.WriteLine(obj.GetHashCode());
+
+
+        }
+        static void Main(string[] args)
+        {
+            var desc = new { Color = "Blue", Location="Hauz Khas " , size = 10.26 , };
+            print(desc);
+
+
+        }
+    }
+}
+-----------------------------------------------------------------------------------------------------------
+
+when two anonymous type having diff. name but sm content
+
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp5
+{
+    class Main1
+    {
+        public static void print(Object obj1,Object obj2)
+        {
+            Console.WriteLine(obj1.Equals(obj2));
+            Console.WriteLine(obj1.GetType());
+            Console.WriteLine(obj2.GetType());
+            Console.WriteLine("HashCode of obj1 is" + obj1.GetHashCode());
+            Console.WriteLine("HashCode of obj2 is "+ obj2.GetHashCode());
+            Console.WriteLine("is obj1 == obj2 "+ (obj1== obj2));
+            Console.WriteLine(obj1.ToString());
+            Console.WriteLine(obj2.ToString());
+
+
+        }
+        static void Main(string[] args)
+        {
+            var desc = new { Color = "Blue", Location="Hauz Khas " , size = 10.26 , };
+
+            var besc = new { Color = "Blue", Location = "Hauz Khas ", size = 10.26, };
+            print(desc,besc);
+
+
+        }
+    }
+}
+
+True
+<>f__AnonymousType0`3[System.String,System.String,System.Double]
+<>f__AnonymousType0`3[System.String,System.String,System.Double]
+HashCode of obj1 is463474806
+HashCode of obj2 is 463474806
+is obj1 == obj2 False
+{ Color = Blue, Location = Hauz Khas , size = 10.26 }
+{ Color = Blue, Location = Hauz Khas , size = 10.26 }
+-----------------------------------------------------------------------------------------------------------
+Anonymous Method
+
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp5
+{
+    delegate void multi(int x);
+    class Main1
+    {
+      
+        static void Main(string[] args)
+        {
+            multi sqr = delegate (int x)
+            {
+                Console.WriteLine("square of "+x+ " is "+ x*x);
+            };
+            sqr += delegate (int x)
+            {
+                Console.WriteLine("cube of " + x + " is " + x * x*x);
+            };
+            sqr(5);
+
+
+        }
+    }
+}
+---------------------------------------------------------------------------------------------------------
+when u one lamda and one method with same name then whatever is written downside will be called
+--Ask doubt
+
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp5
+{
+    delegate void multi(int x);
+    class Main1
+    {
+      
+        static void Main(string[] args)
+        {
+            multi fac = n =>
+            {
+                int a = 1;
+                for (a=1; a <= n; a++)
+                {
+                    //Console.WriteLine(n +" * "+a+" "+n*a);
+                    Console.WriteLine(a);
+                }
+              //  return n;
+            };
+            fac = delegate (int n)
+            {
+                int a = 1;
+                for (a = 1; a <= n; a++)
+                {
+                    Console.WriteLine(n + " * " + a + " " + n * a);
+                }
+               // return n;
+            };
+
+            fac(5);
+
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------------------
+abobe code resolution is multicast
+
+            math fac = n =>
+            {
+                int a = 1;
+                for (a = 1; a <= n; a++)
+                {
+                    //Console.WriteLine(n +" * "+a+" "+n*a);
+                    Console.WriteLine(a);
+                }
+                //  return n;
+            };
+            fac += delegate (int n)//here we are doing multicast
+            {
+                int a = 1;
+                for (a = 1; a <= n; a++)
+                {
+                    Console.WriteLine(n + " * " + a + " " + n * a);
+                }
+                // return n;
+            };
+
+            fac(5);
+-------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+/*Create delegate int math(int n)
+Write 2 method square and cube
+Use anonymous method and print result*/
+
+
+namespace ConsoleApp5
+{
+    delegate int math(int x);
+    class Main1
+    {
+      
+        static void Main(string[] args)
+        {
+            /* math sqr = delegate (int x)
+             {
+             Console.WriteLine("square of x "+x*x);
+             };
+             sqr += delegate (int x)
+             {
+                 Console.WriteLine("cube is"+ x*x*x);
+             };*/
+            math sqr = n =>
+            {
+                Console.WriteLine("square of "+" "+  n +" is "+ n * n);
+                return 0;
+            };
+            sqr += n =>
+            {
+                Console.WriteLine("cube of "+n + " is " + n * n*n);
+                return 0;
+            };
+            sqr(5);
+
+        }
+    }
+}
+-----------------------------------------------------------------------------------------------------------------------
+By using Lamda
+
+
+class Main1
+{
+  
+    static void Main(string[] args)
+    {
+        var arr = new []{ "Divyanshu","Code 1","Mayur Dbda","Humayuh","Kitrechu 1" };
+        IEnumerable<string> list = from g in arr
+                  where g.Contains(" ")
+                  orderby g
+                  select g;
+        foreach (var item in list)
+        {
+            Console.WriteLine(item);
+        }
+
+    }
+}
+
+-----------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+/*Create delegate int math(int n)
+Write 2 method square and cube
+Use anonymous method and print result*/
+
+
+namespace ConsoleApp5
+{
+   // delegate int math(int x);
+    class Main1
+    {
+      
+        static void Main(string[] args)
+        {
+            var arr = new []{ "Divyanshu","Code 1","Mayur Dbda","Humayuh","Kitrechu 1" };
+            IEnumerable<string> list = from g in arr
+                      where g.Contains(" ")
+                      orderby g
+                      select g;
+            foreach (var item in list)
+            {
+                Console.WriteLine(item);
+            }
+
+            //  var subset = arr.Where(game => game.Contains(" ")).OrderBy(game => game).Select(game => game);
+
+            var meth = new[] {"Divyanshu Yadav","Kanad Kumar","Ashish Yadav","Saurabh" };
+            var subs = meth.Where(s=>s.Contains(" ")).OrderBy(s=>s).Select(s=>s);
+            foreach (var sub in subs)
+            {
+                Console.WriteLine(sub);
+            }
+
+
+
+        }
+    }
+}
+-----------------------------------------------------------------------------------------------------
+Data Source=(localdb)\ProjectModels;Initial Catalog=Demo_product;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False
+
+
+
+

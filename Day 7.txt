@@ -1,0 +1,196 @@
+Day 7
+Static method and Inheritance method Hiding
+
+This Code will Give warning but if are going to use nerw keyword then it wont give any warning.
+
+using System;
+namespace ConsoleApp5
+{
+    class A
+    {
+        public static void print()
+        {
+            Console.WriteLine("Print of Parent");
+        }
+    }
+    class B : A { 
+    public static void print()
+        {
+               Console.WriteLine("Print of Child");
+        }
+         public void call()
+        {
+           print();
+            A.print();
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp5
+{
+ class Main1
+    {
+    static void Main(string[] args)
+        {
+          B b1 = new B();
+            b1.call();
+        }
+    
+    }
+
+
+
+}
+-----------------------------------------------------------------------
+By using new keyword
+
+using System;
+namespace ConsoleApp5
+{
+    class A
+    {
+        static int i = 10;
+        public static void print()
+        {
+            Console.WriteLine("Print of Parent"+i);
+        }
+    }
+    class B : A {
+       static  new int i = 20;
+    public new  static void print()
+        {
+               Console.WriteLine("Print of Child"+i);
+        }
+         public void call()
+        {
+           print();
+            A.print();
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------------
+using System;
+namespace ConsoleApp5
+{
+    class A
+    {
+        protected int i;
+        public void show()
+        {
+            Console.WriteLine("Main print " + i);
+        }
+        public void print() { Console.WriteLine("PRINT OF PARENT"); }
+    }
+    class B:A{
+        new int i;
+        public void calc(int a,int b)
+        {
+            base.i = a;
+            i = b;
+        }
+        public new void show()
+        {
+            base.show();
+            base.print();
+            Console.WriteLine("Child show " + i);
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp5
+{
+ class Main1
+    {
+    static void Main(string[] args)
+        {
+         B b1 = new B();
+            b1.calc(10, 20);
+            b1.show();
+        }
+    
+    }
+
+
+
+}
+----------------------------------------------------------------------------------------------------------
+using System;
+using System.Security.Cryptography.X509Certificates;
+
+namespace ConsoleApp5
+{
+    class shape
+    {
+        protected int height;
+       protected int width;
+        protected shape(int height,int width) {
+        this.height = height;
+            this.width = width;
+        }
+        public virtual double area() { return 0; }    
+    }
+    class Triangle:shape {
+        public Triangle(int height,int width):base(height,width) { }
+
+       public override double area() {
+
+            Console.WriteLine("Height if Triangle is {0}  \n width of triangle is {1}", height, width);
+            return height*width*0.5; }
+    }
+    class Rectangle:shape
+    {
+        public Rectangle(int height , int width):base(height,width)
+        {
+            if (height == width)
+            {
+                Console.WriteLine("circle");
+            }
+
+            }
+        public override double area()
+        {
+            if (height == width)
+            {
+                return 3.141 * height * width;
+            }
+            else
+            {
+                return height * width;
+            }
+        }
+       
+        }
+    
+    
+class Main1
+   {
+   static void Main(string[] args)
+       {
+           Rectangle r1 = new Rectangle(10, 10);
+           Console.WriteLine(r1.area());
+       }
+   
+   }
+
+}
+---------------------------------------------------------------------------------------
+
+
+
+
+
+

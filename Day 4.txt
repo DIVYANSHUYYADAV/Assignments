@@ -1,0 +1,341 @@
+Day 4
+
+by using const keyword
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+     class Account
+    {
+        private int id;
+        private string name;
+        private double balance;
+        private const int maxcapacity = 2;
+        private static double int_rate=0.07;
+        static int empid;
+        static Account()
+        {
+            Console.WriteLine("Bank of Divyanshu");
+        }
+        public Account(String name, double balance)
+        {
+            id = ++empid;
+            if (id <= maxcapacity)
+            {
+                this.name = name;
+                this.balance = balance;
+               
+            }
+            else
+            {
+                throw new Exception("capacity is fulled");
+            }
+        }
+        public void deposit(double amt)
+        {
+            balance += amt;
+            Console.WriteLine("Amount deposited: {0}",amt);
+            Console.WriteLine("New Balance is : {0}", balance);
+        }
+        public void withdraw(double amt)
+        {
+            if (balance < amt)
+            {
+                Console.WriteLine("low ablance");
+            }
+            else
+            {
+                balance -= amt;
+                Console.WriteLine("Amount debited : {0}", amt);
+                Console.WriteLine("New Balance is : {0}",balance);
+            }
+        }
+        public void intrestt()
+        {
+            double b = balance * int_rate;
+            balance = b + balance;
+            Console.WriteLine("Balance after intrest is:{0}", balance);
+        }
+        public override String ToString()
+        {
+            return String.Format("Name of Acc Holder: {0}  Current Balance: {1}",name,balance);
+        }
+
+            
+
+
+    }
+    
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+   class Amain
+    {
+        static void Main(string[] args)
+        {
+            Account a1 = new Account("Divyanshu", 5000);
+            a1.deposit(6000);
+            a1.intrestt();
+            a1.withdraw(2000);
+            Console.WriteLine(a1);
+            Account a2 = new Account("Pratham", 7888);
+            a2.deposit(1000);
+            a2.intrestt();
+            Console.WriteLine(a2);
+            a2.withdraw(12000);
+            Account a3 = new Account("Omkar", 3000);
+            a3.deposit(2000);
+            a3.intrestt();
+            a3.withdraw(1000);
+            Console.WriteLine(a3);
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+   class Amain
+    {
+        static void Main(string[] args)
+        {
+            Account a1 = new Account("Divyanshu", 5000);
+            a1.deposit(6000);
+            a1.intrestt();
+            a1.withdraw(2000);
+            Console.WriteLine(a1);
+            Account a2 = new Account("Pratham", 7888);
+            a2.deposit(1000);
+            a2.intrestt();
+            Console.WriteLine(a2);
+            a2.withdraw(12000);
+            Account a3 = null;
+            try
+            {
+                 a3 = new Account("Omkar", 3000);
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            a3.deposit(2000);
+            a3.intrestt();
+            a3.withdraw(1000);
+            Console.WriteLine(a3);
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------------------
+
+Program to find square and pow with the help of static class
+
+using System;
+
+
+namespace ConsoleApp3
+{
+   static class StaticClass
+    {
+    public static double sqr(double x)
+        {
+            return x * x;
+        }
+        public static double Pow(double x,double n) {
+            double ans = 1;
+            for(double i = 1; i <= n; i++)
+            {
+                ans = ans * x;
+            }
+            return ans;
+        }
+    }
+}
+
+using System;
+using System.Diagnostics;
+
+namespace ConsoleApp3
+{
+    class StaticClassMain
+    {
+     static void Main(string[] args)
+        {  
+            Console.WriteLine(StaticClass.sqr(25));
+            Console.WriteLine(StaticClass.Pow(4,3));
+        }
+    }
+}
+---------------------------------------------------------------------------------------------------------------
+staic class only load when we instantiate static membervariable
+
+
+using System;
+using System.Diagnostics;
+
+namespace ConsoleApp3
+{
+    static class StaticClassMain
+    {
+        public const int num1 = 46;
+         public static int num2;
+        static StaticClassMain()
+        {
+            num2 = 45;
+            Console.WriteLine("In staic class constructor {0}", num2);
+        }
+        public static void add()
+        {
+            Console.WriteLine("add");
+        }
+
+    }
+     
+    class StaticClassMain2 { 
+    static void Main(string[] args)
+        {
+            int y = StaticClassMain.num1;
+            StaticClassMain.add();
+            //  int z = StaticClassMain.num2;
+            Console.WriteLine("in main {0}", y);
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------
+Properties(creating get and set)
+
+using System;
+namespace ConsoleApp3
+{
+    class Employee1
+    {
+        double salary;
+        static int epid;
+        int id;
+
+        public double Salary
+        {
+            get
+            {
+
+                Console.WriteLine("I am in get body");
+                return salary;
+            }
+            set
+            {
+               id=++epid;
+                salary = value;
+                Console.WriteLine("in set" + value);
+
+            }
+
+        }
+            public int disp()
+        {
+            return id;
+        }
+    }
+    public class StaticClassMain
+    {
+        static void Main(String[] args) {
+
+        Employee1 e1 = new Employee1();
+            e1.Salary = 4500;
+            Console.WriteLine(e1.disp() + " "+ e1.Salary);
+        
+        } 
+    }
+}
+--------------------------------------------------------------------------------------------------------------------
+
+create a class which will take name of someone if the size of name is less than 3 then throw exception do this using get and set
+
+using System;
+namespace ConsoleApp3
+{
+    class Employee1
+    {
+        private string name;
+        public String Name
+        {
+            get
+            {
+                Console.WriteLine("In get body");
+                return name;
+
+            }
+
+
+            set
+            {
+                if (value.Length <= 3)
+                {
+                    throw new ArgumentException("Please increase your word size");
+                }
+                else
+                {
+                    Console.WriteLine("In set body");
+                    name = value;
+                }
+                
+            }
+        }
+    }
+    class StaticClassMain
+    {
+static void Main(string[] args) { 
+        Employee1 e1 = new Employee1();
+            try
+            {
+                e1.Name = "Divyanshu";
+            }
+            catch(Exception ex) 
+            {
+Console.WriteLine(ex.Message);
+            }
+            Console.WriteLine(e1.Name);
+        
+        }
+
+    }
+}
+--------------------------------------------------------------------------------------------------------------------
+
+Object Initialization of get and set which was introduced in version 3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

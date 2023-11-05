@@ -1,0 +1,91 @@
+Notes Day_12
+
+IConfiguration 
+helps your C# program to read settings like usernames, passwords, and other important information that your program needs to work.
+It's like a list of instructions that tells your program how to behave. It makes it easy for your program to find and use these instructions without you having to hard-code them into your program.
+ is an interface that represents a set of key/value application configuration properties.
+
+GetConnectionString 
+is a way to ask your program for the special code it needs to connect to a database. It helps you get the information necessary, like the database's location, its name, and how to log in, so your program can talk to the database correctly. 
+
+Sure, in simple terms, this line is helping your program to create a connection to a database.
+
+SqlConnection is like a door that lets your program talk to the database.
+con is the name you give to this particular door, so you can use it later.
+new SqlConnection(_connectionString) is telling your program to make a new door, using the special code that you have stored in the _connectionString variable. This code has information like where the database is and how to get in.
+
+
+When used with the SqlConnection class, the using statement helps to ensure that the connection to the database is closed and the resources associated with it are released when the execution leaves the scope of the using block. 
+----------------------------------------------------------------------------------------------------------------
+
+ SqlCommand cmd = new SqlCommand("Select * from Employee", con);
+SqlCommand is like a note that tells the database what you want to do, like asking for information or making changes.
+cmd is the name you give to this note, so you can use it later.
+"Select * from Employee" is the actual message you want to send to the database, asking for all the information from the "Employee" table.
+con is the connection to the database that you created earlier. This tells the note how to reach the database to deliver the message.
+--------------------------------------------------------------------------------------------------------------------------------
+  con.Open();
+con is the connection to the database that you created earlier, which is like the door to the database.
+open is the action you want to perform on the door, which means you're asking the program to open the door and establish a connection to the database.
+-------------------------------------------------------------------------------------------------------------------------------
+SqlDataReader dr = cmd.ExecuteReader();
+
+SqlDataReader is like a helpful assistant that retrieves information from the database and brings it to your C# program. It lets you look at each piece of information one by one, so you can use it in your program.
+
+ExecuteReader() is like asking the database to read and give you the information you requested.
+-------------------------------------------------------------------------------------------------------------------
+var builder = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("jsconfig1.json", optional: false, reloadOnChange: true);
+    _iconfriguation = builder.Build();
+
+
+var builder = new ConfigurationBuilder() is creating a new helper that can gather these settings for your program.
+.SetBasePath(Directory.GetCurrentDirectory()) is telling the helper where to start looking for these settings, like a starting point on your computer.
+.AddJsonFile("jsconfig1.json", optional: false, reloadOnChange: true) is adding a specific file (jsconfig1.json) that has these settings you want your program to use. It's like putting the important instructions in a file.
+_iconfriguation = builder.Build() is making sure that all these instructions are put together and ready for your program to use.
+So, this code is helping your program find and use important instructions stored in a file called jsconfig1.json to make sure everything runs smoothly.
+
+var: It's like a container that can hold different types of things without you having to specify the exact type.
+
+builder: It's like a person you hire to help you gather things together.
+
+new ConfigurationBuilder(): It's like creating a new special tool to help you gather important information for your program.
+
+.SetBasePath(Directory.GetCurrentDirectory()): It's like telling the tool where to start looking for the important information, like telling someone the exact place to start searching.
+
+.AddJsonFile("jsconfig1.json", optional: false, reloadOnChange: true): It's like adding a specific file that contains the important information you need, and making sure that it's necessary to have this file, and if the file changes, your program should update accordingly.
+
+_iconfriguation: It's like a storage box where the helper puts all the important information it found.
+
+builder.Build(): It's like putting all the information together in a way that your program can easily use and understand.
+
+Overall, this code is creating a special tool to gather important instructions stored in a file called jsconfig1.json. It ensures that the program knows where to look for these instructions and that it can use them properly.
+
+var: This keyword allows you to declare a variable without specifying its exact data type explicitly.
+
+builder: It's the name of the variable that holds an instance of the ConfigurationBuilder class, which helps manage configuration settings.
+
+new ConfigurationBuilder(): This creates a new instance of the ConfigurationBuilder class, which is a tool provided by .NET to manage configuration settings.
+
+.SetBasePath(Directory.GetCurrentDirectory()): This function sets the base path for the configuration file, specifying the directory where the program should look for configuration files.
+
+.AddJsonFile("jsconfig1.json", optional: false, reloadOnChange: true): This function adds a JSON configuration file named "jsconfig1.json" to the configuration builder, indicating that this file is essential for the program (optional: false) and should be reloaded if it changes (reloadOnChange: true).
+
+_iconfriguation: This is a variable that holds the configuration settings retrieved from the JSON file.
+
+builder.Build(): This function assembles all the configuration settings added to the builder and prepares them for use within the program.
+
+In essence, this code is using the ConfigurationBuilder to locate and load configuration settings from a JSON file ("jsconfig1.json") and make them available for use in the program.
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
