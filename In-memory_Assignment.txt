@@ -1,0 +1,130 @@
+In-memory_Assignment
+
+using System;
+namespace ConsoleApp6
+{
+    public class Vita_Student
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Branch { get; set; }  
+        public String Mobile { get; set; }  
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6
+{
+    interface IStudentRepository
+    {
+        Vita_Student GetVita_Student(int id);
+        IEnumerable<Vita_Student> GetallVita_Students();
+        Vita_Student Add(Vita_Student student);
+        Vita_Student Update(Vita_Student student);  
+        Vita_Student Delete(int id);
+    }
+}
+
+
+using System;
+namespace ConsoleApp6
+{
+    public class loadVitaStudent : IStudentRepository
+    {
+       public List<Vita_Student> students;
+        public loadVitaStudent()
+        {
+            students = new List<Vita_Student>() {
+            new Vita_Student()
+            {
+                Id = 1,Name="Divyanshu Yadav",Branch="Dac",Mobile="8881784090"
+            },
+            new Vita_Student() {Id = 2,Name="Ankit Yadav",Branch="Dac",Mobile="8922902290"},
+            new Vita_Student() {Id = 3,Name="Mayur Patil",Branch="Dac",Mobile="9453888944"},
+            new Vita_Student() {Id = 4,Name="Rahul Verma",Branch="Dac",Mobile="8725668910"},
+            new Vita_Student() {Id = 5,Name="Akash Nagar",Branch="Dbda",Mobile="9012640011"},
+            };
+
+        }
+
+        public Vita_Student Add(Vita_Student student1)
+        {
+            student1.Id = students.Max(x => x.Id)+1;
+            students.Add(student1);
+            return student1;
+        }
+        public Vita_Student Delete(int ID) {
+        Vita_Student s1 = students.FirstOrDefault(x => x.Id == ID);
+            if(s1 != null)
+            {
+                students.Remove(s1);
+            }
+            return s1;
+        }
+        public IEnumerable<Vita_Student> GetallVita_Students() {
+        return students;
+        }
+        public Vita_Student GetVita_Student(int ID)
+        {
+            Vita_Student s = students.FirstOrDefault(x=>x.Id==ID);
+            return s;
+        }
+       public  Vita_Student Update(Vita_Student student5)
+        {
+          Vita_Student student = students.FirstOrDefault(student => student.Id==student5.Id);
+            if(student != null)
+            {
+                student.Id = student5.Id;
+                student.Name = student5.Name;
+                student.Branch = student5.Branch;
+                student.Mobile = student5.Mobile;
+
+            }
+            return student;
+        }
+
+    }
+}
+
+using System;
+namespace ConsoleApp6
+{
+    class Main1
+    {
+       
+        static void Main(string[] args)
+        {
+            loadVitaStudent l1 = new loadVitaStudent();
+        
+                Vita_Student s1 = l1.Add(new Vita_Student() { Name = "Nikhil", Branch = "Dbda", Mobile = "8976441100" });
+                Console.WriteLine("New element added in the list "+s1.Name+" "+s1.Branch+" "+s1.Mobile);
+            Console.WriteLine();
+            //l1.Update(s1);
+           var v=l1.GetallVita_Students();
+            foreach (var i in v)
+            {
+                Console.WriteLine(i.Id + " " + i.Name + " " + i.Branch + " " + i.Mobile);
+            }
+            l1.Delete(2);
+            Console.WriteLine();
+            foreach (var i in v)
+            {
+                Console.WriteLine(i.Id + " " + i.Name + " " + i.Branch + " " + i.Mobile);
+            }
+            Vita_Student l2 = l1.GetVita_Student(3);
+           
+            {
+                Console.WriteLine("Detail of the student having ID =3 "+" "+l2.Id + " " + l2.Name + " " + l2.Branch + " " + l2.Mobile);
+            }
+            l1.Update(s1);
+
+
+
+        }
+        }
+    }
