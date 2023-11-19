@@ -1,0 +1,19 @@
+employee.Id = _employeeList.Max(e => e.Id) + 1;
+
+
+
+Max(): This is a LINQ (Language-Integrated Query) method that is used to find the maximum value in a collection. In this case, it is applied to the _employeeList collection to find the maximum Id value among the existing Employee objects.
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+e => e.Id: This is a lambda expression that represents a parameter e (which stands for each element in the collection) and returns the value of the Id property of each Employee object. This lambda expression is used as an argument to the Max() method, allowing it to compare Id values and find the maximum Id value in the _employeeList collection.
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Employee employee = _employeeList.FirstOrDefault(e => e.Id == Id);
+
+
+Employee: This is the data type of the variable employee, which represents an object of the Employee class.
+_employeeList: This is the list that stores objects of the Employee class.
+FirstOrDefault(): This LINQ method retrieves the first element from the collection that satisfies a specified condition.
+e => e.Id == Id: This is a lambda expression that represents an individual element (e) in the collection. It checks if the Id property of the element is equal to the provided Id parameter.
+---------------------------------------------------------------------------------------------------------------------------------------------
+

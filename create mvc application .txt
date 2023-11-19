@@ -1,0 +1,10 @@
+create mvc application 
+step1-create poco class customer id,name,mobile,build-amount
+step-2-create interface Icoustomer with method IEnumerable<Customer>getallcustomer
+step-3-create class service customer /implement Icustomer(return the)
+step-4create a controller customer
+step-5create constructor and inject interface refrence 
+step-6write action method - Index which will return list of Customer
+Generate View 
+In program.cs file  call add transient
+when u run the application it should display list of customer

@@ -1,0 +1,195 @@
+Day_14 Assignment
+
+create a pococlass employee with member id name salary department-int deptid
+create another class department with member id ,dpt_name
+create a context clASS which will derive frpm DBcontext
+set the connection string in onconfiguring method
+put DBSet department,employee
+download 4 dll files 
+add migration update database 
+
+1-Task--
+display ALL employee who is in dept 1
+2-Task--
+display all employee
+3-TASK--
+* enter data first in dept table and then add in employee table
+4-Task--
+add employee record through entity(code)
+5-Task--
+delete employee where employee id =3=
+6-Task--
+display department name and employee within it
+7-Task--
+display all employee whose salary is greater than 80k
+8-Task--
+display all employee whose name starting letter 's'
+----------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6.Models
+{
+   public class department
+    {
+        public int Id { get; set; }
+        public string? deptName { get; set; }
+        public IList<Employee?> Employees { get; set; }
+    }
+}
+----------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6.Models
+{
+    public class Employee
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public double? Salary { get; set; } 
+        public int? departmentId { get; set; }
+        
+
+        public override string ToString()
+        {
+            return String.Format("{0} {1} {2} {3}  ",Id,Name,Salary,departmentId);
+        }
+
+    }
+}
+------------------------------------------------------------------------------------------------------------
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6.Models
+{
+   public class EmployeeContext:DbContext
+    {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\ProjectModels;Initial Catalog=Demo_product;Integrated Security=True;");
+        }
+        public DbSet<Employee> Employee { get; set;}
+        public DbSet<department> department { get; set;}
+    }
+}
+------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6.Models
+{
+   public  class DbServices
+    {
+        private readonly EmployeeContext ec = new EmployeeContext();
+        public void displayallEmp()
+        {
+            foreach(var v in ec.Employee.ToList<Employee>()) {
+            Console.WriteLine(v);
+            }
+        }
+        public void dispspec(int id)
+        {
+          //  var emp2 = new List<Employee>();
+            //emp2.Add(ec.Employee.FirstOrDefault(x => x.Id == id));
+          //  var emp2 = ec.Employee.Where<Employee>(x=>x.Id==id).ToList<Employee>();
+         // var em = ec.Employee.FirstOrDefault<Employee>(x=>x.Id==id);
+         var g = ec.Employee.FirstOrDefault<Employee>(x=> x.Id == id);  
+            if (g != null)
+            {
+                Console.WriteLine(g.ToString());
+            }
+           /* foreach(var v in  emp2)
+            {
+                if(v != null)
+                {
+                    Console.WriteLine(v.ToString());
+                }
+            }*/
+        }
+        public void AddEmp(Employee emp)
+        {
+            ec.Add<Employee>(emp);
+            ec.SaveChanges();
+        
+       }
+        public void deleteemp(int id)
+        {
+            var delemp = ec.Employee.FirstOrDefault<Employee>(x => x.Id == id);
+            if (delemp != null)
+            {
+                ec.Remove<Employee>(delemp);
+                ec.SaveChanges();
+            }
+        }
+        public void SalMore(double salary)
+        {
+            var emp = ec.Employee.Where<Employee>(a => a.Salary >= salary).ToList<Employee>();
+            foreach(var v in emp)
+            {
+                Console.WriteLine(v.ToString());
+            }
+        }
+        public void dispdept(int id)
+        {
+           var v =(ec.Employee.Where<Employee>(department => department.departmentId == id)).ToList<Employee>();
+            foreach(var emp in v)
+            {
+                Console.WriteLine(emp.ToString());
+            }
+
+        }
+        public void startletter(string c)
+        {
+           var v = ec.Employee.Where<Employee>(x=>x.Name.StartsWith(c)).ToList<Employee>();
+            Console.WriteLine("inside method");
+            foreach (var a in v)
+            {
+                Console.WriteLine(a.ToString());
+            }
+        }
+           
+    }
+}
+----------------------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp6.Models
+{
+    public class EmployeeMain
+    {
+        static void Main(string[] args)
+        {
+
+            DbServices services = new DbServices();
+            //services.displayallEmp();
+            services.dispspec(2);
+            Console.WriteLine();
+           // services.AddEmp(new Employee() {Name="Aadarsh",Salary=60000,departmentId=4 });
+            services.displayallEmp();
+            Console.WriteLine();
+
+            services.dispdept(2);
+            services.startletter("D");
+
+        }
+    }
+}

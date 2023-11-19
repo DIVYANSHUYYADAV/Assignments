@@ -1,0 +1,399 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FinalBankAccount
+{
+    internal class MyException:ApplicationException
+    {
+        string mess;
+        public MyException(string mess) :base (mess)
+        {
+            this.mess = mess;
+        }
+    }
+}
+-----------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FinalBankAccount
+{
+    delegate void wd(string name, double balance, double wAmt);
+    delegate void dp(string name, double balance, double dAmt);
+    abstract class Account
+    {
+        public event wd wdEvent;
+        public event dp dpEvent;
+        static int getID;
+        readonly int accID;
+        string name;
+        double balance;
+
+        static Account()
+        {
+            Console.WriteLine("    ***---------------*****---------------***");
+            Console.WriteLine("      Welcome To Lukshmi Chit Fund Bank...... ");
+            Console.WriteLine("    ***---------------*****---------------***");
+        }
+
+        public Account()
+        {
+            if (getID < 6)
+                accID = ++getID;
+            else
+                throw new MyException("Only Five Accounts Allowed");
+        }
+
+        public Account(string name, double balance)
+        {
+
+            Name = name;
+            if (balance < 1000)
+            {
+                throw new MyException("account opening ammount must be 1000 or more");
+            }
+            else
+            {
+                Balance = balance;
+                if (getID < 6)
+                    accID = ++getID;
+                else
+                    throw new MyException("Only Five Accounts Allowed");
+            }
+            
+        }
+
+        public int AccID
+        {
+            get { return accID; }
+        }
+
+        public string Name
+        {
+            set
+            {
+                if (value.Length > 2 && value.Length < 15)
+                    name = value;
+                else
+                {
+                    throw new MyException("Please Enter Valid Name");
+                }
+            }
+            get { return name; }
+        }
+
+        public double Balance
+        {
+            protected set
+            {
+                balance = value; 
+            }
+            get { return balance; }
+        }
+
+        public void deposit(double dAmt)
+        {
+            balance = balance + dAmt;
+            OnDeposit(Name, balance, dAmt);
+        }
+
+        public void OnWithdraw( string name, double balance, double wAmt)
+        {
+            if (wdEvent != null)
+            {
+                wdEvent(name, Balance, wAmt);
+            }
+        }
+
+        public void OnDeposit(string name, double balance, double dAmt)
+        {
+            if(dpEvent!=null)
+            {
+                dpEvent(Name, Balance, dAmt);
+            }
+        }
+
+
+        public abstract void withdraw(double wAmt);
+    }
+}
+-------------------------------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace FinalBankAccount
+{
+    internal class CurrentAcc: Account
+    {
+        public CurrentAcc(string name, double balance) 
+        {
+            Name = name;
+            Balance = balance;
+                Console.WriteLine("");
+                Console.WriteLine("Current Account has been created of {0} .", name);
+        }
+
+        public override void withdraw(double wAmt)
+        {
+            Balance = Balance - wAmt;
+            OnWithdraw(Name, Balance, wAmt);
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace FinalBankAccount
+{
+    internal class SavingAcc:Account
+    {
+        private const double IntRate = 0.07;
+        private double intrest=0;
+        public SavingAcc(string name, double balance) : base(name, balance)
+        {
+            
+                Console.WriteLine("");
+                Console.WriteLine("Saving Account has been created of {0} .", name);
+            
+        }
+
+        public override void withdraw(double wAmt)
+        {
+            if ((Balance - wAmt) > 2000)
+            {
+                Balance = Balance - wAmt;
+                OnWithdraw(Name, Balance, wAmt);
+            }
+            else
+            {
+                throw new MyException("insuffecient balance.");
+            }
+        }
+
+        public static double payIntreste(SavingAcc s)
+        {
+            s.intrest = s.Balance * IntRate;
+           
+            return s.intrest;
+        }
+    }
+}
+-----------------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FinalBankAccount
+{
+    internal class Message
+    {
+        public void email(string Name, double Balance, double Amt)
+        {
+
+            Console.WriteLine("Email has been sent to {0}... ", Name);
+        }
+        public void phone(string Name, double Balance, double Amt )
+        {
+            Console.WriteLine("");
+            Console.WriteLine("SMS has been sent to {0}... ", Name);
+        }
+        public void WithdrawDisplay(string Name, double Balance, double wAmt)
+        {
+            Console.WriteLine("Amount withdrawn: {0}  new bal: {1} name: {2}", wAmt, Balance, Name);
+            Console.WriteLine(" ");
+        }
+        public void DepositDisplay(string Name, double Balance, double dAmt)
+        {
+            Console.WriteLine("Amount Deposite: {0} new bal: {1} name: {2}", dAmt, Balance, Name);
+            Console.WriteLine(" ");
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+using System.Collections.Generic;
+using System.Security.Principal;
+using FinalBankAccount;
+namespace FinalBankAccount
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+           
+            
+
+           List<Account> accList = null;
+             
+            try
+            {
+                accList=new List<Account>{ new CurrentAcc("Abhishek", 20) };
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("    -----------------------------------------");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("    -----------------------------------------");
+            }
+
+            try
+            {
+                accList.Add( new SavingAcc("Akash", 10000) );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("    -----------------------------------------");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("    -----------------------------------------");
+            }
+
+            try
+            {
+                accList.Add( new CurrentAcc("Nikhil", 50000));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("    -----------------------------------------");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("    -----------------------------------------");
+                
+            }
+
+            try
+            {
+                accList.Add( new SavingAcc("Prasad", 135000));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("    -----------------------------------------");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("    -----------------------------------------");
+            }
+
+
+            Console.WriteLine(" ");
+            Console.WriteLine("    ***---------------*****---------------***");
+            Console.WriteLine("   Account List of Lukshmi Chit Fund Bank...... ");
+            Console.WriteLine("    ***---------------*****---------------***");
+            
+            if ( accList != null ) 
+            {
+                foreach (Account account in accList)
+                {
+                    Console.WriteLine("Account ID: " + account.AccID + " || Account Name: " + account.Name + " || Account Balance: " + account.Balance);
+                }
+            }
+            else 
+            { 
+                Console.WriteLine("Zero Account present in the Bank.. "); 
+            }
+
+
+            Console.WriteLine(" ");
+            Console.WriteLine("    ***---------------*****---------------***");
+            Console.WriteLine("              Lukshmi Chit Fund Bank...... ");
+            Console.WriteLine("    ***---------------*****---------------***");
+
+
+
+            Message m = new Message();
+
+            foreach (Account account1 in accList)
+            {
+                    account1.dpEvent += m.phone;
+                    account1.dpEvent += m.email;
+                    account1.dpEvent += m.DepositDisplay;
+            }
+
+            foreach (Account account2 in accList)   
+            {
+                    account2.wdEvent += m.phone;
+                    account2.wdEvent += m.email;
+                    account2.wdEvent += m.WithdrawDisplay;
+            }
+
+
+
+
+
+            Console.WriteLine("Please Enter the Name of the Customer: ");
+            string cName = Console.ReadLine();
+            bool printed=false;
+            foreach (Account account3 in accList)
+            {
+                if (account3.Name == cName)
+                {
+                    printed = true;
+                    Console.WriteLine("Enter the Deposit amount in account of {0} : ", account3.Name);
+                    account3.deposit(Convert.ToInt32(Console.ReadLine()));
+                }
+            } 
+            if( printed == false)
+            {
+                Console.WriteLine("Entered name customer does not have account in the bank.");
+            }
+             Console.WriteLine("    -----------------------------------------");
+
+
+
+
+
+            Console.WriteLine("Please Enter the Name of the Customer: ");
+            string cName1 = Console.ReadLine();
+            bool printed1 = false;
+            foreach (Account account4 in accList)
+            {
+                if (account4.Name == cName1)
+                {
+                        printed1 = true;
+                        Console.WriteLine("Enter the Withdraw amount in account of {0} : ", account4.Name);
+                        account4.withdraw(Convert.ToInt32(Console.ReadLine()));
+                }
+            }
+            if (printed1 == false)
+            {
+                Console.WriteLine("Entered name customer does not have account in the bank.");
+            }
+
+            
+
+            Console.WriteLine(" ");
+            Console.WriteLine("    ***---------------*****---------------***");
+            Console.WriteLine("       Intrest List on Saving Account..... ");
+            Console.WriteLine("    ***---------------*****---------------***");
+
+
+            foreach (Account account in accList)
+            {
+                if (account.GetType() == typeof(SavingAcc))
+                {
+                    double intrest = SavingAcc.payIntreste((SavingAcc)account);
+                    
+                    Console.WriteLine("Account ID: "+account.AccID+"  || Name: "+account.Name+"  || Intrest to be paid: " + intrest + "  ||  Balance: " + (account.Balance+intrest));
+                }
+
+            }
+            Console.WriteLine("    -----------------------------------------");
+
+
+
+
+        }
+    }
+}

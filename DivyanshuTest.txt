@@ -1,0 +1,198 @@
+
+Employee class
+-----------------
+public delegate void empDel(string name, double bonus, double salary);
+internal abstract class Employee
+{
+    public event empDel bonusEvent;
+    int id;
+    string name;
+    static int getId;
+    public static double TDS = 0.1;
+
+    public int ID { get; }
+    public string Name 
+    {
+        set
+        {
+            if (value.Length > 2 && value.Length < 15)
+            {
+                name = value;
+            }
+            else
+            {
+                throw new MyException($"Invalid Name: {value}");
+            }
+        }
+        get { return name; }
+    }
+    public double Salary {  get; protected set; }
+
+    public double NetSalary {  get; protected set; }
+
+    public Employee(string name, double salary)
+    {
+        ID = ++getId;
+        Name = name;
+        Salary = salary;
+    }
+
+    public abstract double GiveBonus();
+
+    public double CalculateSalary()
+    {
+        double tax = Salary * TDS;
+        NetSalary = Salary - tax;
+        return tax;
+    }
+    public void onBonus(string name, double bonus, double salary)
+    {
+        if(bonusEvent != null)
+        {
+            bonusEvent(name, bonus, salary);
+        }
+    }
+}
+
+PermanentEmployee
+--------------------
+internal class permanentEmployee : Employee
+{
+    double bonuspercent = 0.03;
+    public permanentEmployee(string name, double salary):base(name, salary)
+    {
+        
+    }
+    public override double GiveBonus()
+    {
+        double bonus = NetSalary * bonuspercent;
+        if (bonus < 5000)
+        {
+            NetSalary = NetSalary + bonus;
+        }
+        else
+        {
+            bonus = 5000;
+            NetSalary = NetSalary + bonus;
+        }
+        onBonus(Name, bonus, NetSalary);
+        return bonus;
+    }
+}
+
+contractEmployee
+-------------------
+internal class ContractEmployee : Employee
+{
+    public ContractEmployee(string name, double salary) : base(name, salary)
+    {
+
+    }
+    public override double GiveBonus()
+    {
+        return 0;
+    }
+}
+
+MyException
+---------------
+public class MyException : ApplicationException
+{
+    string message;
+    public string Message { get { return message; } }
+
+    public MyException(string message)
+    {
+        this.message = message;
+    }
+}
+
+Program	
+-------------
+internal class Program
+{
+    static Program()
+    {
+        Console.WriteLine("SM VITA_DIvyanshu");
+    }
+    static void Main(string[] args)
+    {
+
+        try
+        {
+            Employee[] employees = { new permanentEmployee("Divyanshu", 20000), new ContractEmployee("Thakur", 25000), new permanentEmployee("Prasad", 20000) };
+            for (int i = 0; i < employees.Length; i++)
+            {
+                employees[i].bonusEvent += (string name, double bonus, double salary) => { Console.WriteLine("SMS : Name:{2} Your bonus : {0} NetSalray : {1}", bonus, salary, name); };
+                employees[i].bonusEvent += (string name, double bonus, double salary) => { Console.WriteLine("Email : Name:{2} Your bonus : {0} NetSalray : {1}", bonus, salary, name); };
+            }
+            for (int i = 0; i < employees.Length; i++)
+            {
+                employees[i].CalculateSalary();
+                //Console.WriteLine(employees[i].NetSalary);
+            }
+
+            for (int i = 0; i < employees.Length; i++)
+            {
+                employees[i].GiveBonus();
+            }
+        }
+        catch (MyException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
+        
+    }
+}
+
+----------------------------------------------------------------------------------------------------------
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Enter a string to reverse:");
+        string input = Console.ReadLine();
+
+        string reversedString = ReverseString(input);
+
+        Console.WriteLine("Reversed string: " + reversedString);
+    }
+
+    static string ReverseString(string input)
+    {
+        char[] charArray = input.ToCharArray();
+        int length = charArray.Length;
+
+        for (int i = 0; i < length / 2; i++)
+        {
+            char temp = charArray[i];
+            charArray[i] = charArray[length - i - 1];
+            charArray[length - i - 1] = temp;
+        }
+
+        return new string(charArray);
+    }
+}
+-------------------------------------------------------------------------------------------------------------
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Enter a sentence:");
+        string input = Console.ReadLine();
+
+        int wordCount = CountWords(input);
+        int sentenceCount = CountSentences(input);
+
+        Console.WriteLine($"Number of words: {wordCount}");
+        Console.WriteLine($"Number of sentences: {sentenceCount}");
+    }
+
+}
+-------------------------------------------------------------------------------------------------

@@ -1,0 +1,647 @@
+..................................................................Q1....................................................................................
+
+namespace CRUD.Models
+{
+    public class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Department { get; set; }
+    }
+}
+
+namespace CRUD.Models
+{
+    public interface IEmployeeRepository
+    {
+        Employee GetEmployee(int Id);
+        IEnumerable<Employee> GetAllEmployee();
+        Employee Add(Employee employee);
+        Employee Update(Employee employeeChanges);
+        Employee Delete(int Id);
+    }
+
+}
+
+namespace CRUD.Models
+{
+    public class SQLEmployeeRepository:IEmployeeRepository
+    {
+        private readonly Appdbcontaxcts context;
+
+        public SQLEmployeeRepository(Appdbcontaxcts context)
+        {
+            this.context = context;
+        }
+        public Employee Add(Employee employee)
+        {
+            context.Employees.Add(employee);
+            context.SaveChanges();
+            return employee;
+        }
+
+        public Employee Delete(int Id)
+        {
+            Employee employee = context.Employees.Find(Id);
+            if (employee != null)
+            {
+                context.Employees.Remove(employee);
+                context.SaveChanges();
+            }
+            return employee;
+        }
+
+        public IEnumerable<Employee> GetAllEmployee()
+        {
+            return context.Employees;
+        }
+
+        public Employee GetEmployee(int Id)
+        {
+            return context.Employees.Find(Id);
+        }
+
+        public Employee Update(Employee employeeChanges)
+        {
+            var employee = context.Employees.Attach(employeeChanges);
+            employee.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            //context.Update(employee);
+            context.SaveChanges();
+            return employeeChanges;
+        }
+
+
+    }
+}
+namespace CRUD.Models
+{
+    public class CustomMiddleWear : IMiddleware
+    {
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        {
+            await context.Response.WriteAsync("Hello From Cuustom Middlewear");
+            await next(context);
+        }
+    }
+}
+using Microsoft.EntityFrameworkCore;
+
+namespace CRUD.Models
+{
+    public class Appdbcontaxcts:DbContext
+    {
+        public Appdbcontaxcts(DbContextOptions<Appdbcontaxcts> options):base(options)  {}
+        public DbSet<Employee> Employees { get; set; }
+    }
+}
+
+using CRUD.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace CRUD
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContextPool<Appdbcontaxcts>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+            builder.Services.AddScoped<IEmployeeRepository,SQLEmployeeRepository>();
+            builder.Services.AddTransient<CustomMiddleWear>();
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            /*app.UseMiddleware<CustomMiddleWear>();
+            app.Run(async context =>await context.Response.WriteAsync("Hello"));*/
+
+            app.UseHttpsRedirection();
+            
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.Run();
+        }
+    }
+}
+
+..........................................................................Q2................................................................................................
+namespace WA_Cookiee.Models
+{
+    public class UserLogin
+    {
+        public string Email { get; set; }    
+        public string Password { get; set; }
+        public bool Remember {  get; set; }
+    }
+}
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Net;
+using WA_Cookiee.Models;
+
+namespace WA_Cookiee.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult Display()
+        {
+            return View();
+        }
+        public IActionResult Contactus()
+        {
+            return View();
+        }
+        public IActionResult HrData()
+        {
+            if (HttpContext.Session.GetString("Email") != null)
+            {
+                return View(); // Or return whatever action result you need
+            }
+            else
+            {
+                return RedirectToAction("Create", "Sessiondemo");
+            }
+
+            
+            
+
+
+
+        }
+
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}
+
+using Microsoft.AspNetCore.Mvc;
+using WA_Cookiee.Models;
+
+
+namespace WA_Cookiee.Controllers
+{
+    public class LoginController : Controller
+    {
+        public ActionResult Index()
+        {
+            var CookieValue = Request.Cookies["Ukey"]?.ToString();
+            ViewBag.CookieValue = CookieValue;
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+            UserLogin obj = null;
+            var CookieValue = Request.Cookies["Ukey"]?.ToString();
+            if (CookieValue != null)
+            {
+                obj = new UserLogin();
+                obj.Email = CookieValue;
+            }
+
+
+            return View(obj);
+        }
+        [HttpPost]
+        public IActionResult Create(UserLogin Userdata)
+        {
+            //ViewBag.Error = "In valid user";
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Userdata.Remember == true && Userdata.Email == "training.vita@gmail.com")
+                    {
+                        CookieOptions options = new CookieOptions();
+                        options.Expires = DateTime.Now.AddDays(7);
+                        Response.Cookies.Append("Ukey", Userdata.Email, options);
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "InValid data");
+                        return View();
+                    }
+                }
+
+                else
+                {
+
+                    return View();
+
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        public ActionResult Lgout()
+        {
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Append("Ukey", "", options);
+
+
+            return RedirectToAction(nameof(Index));
+        }
+
+    }
+}
+
+using Microsoft.AspNetCore.Mvc;
+using WA_Cookiee.Models;
+
+namespace WA_Cookiee.Controllers
+{
+    public class SessiondemoController : Controller
+    {
+        const string SessionEmail = "Email";
+        const string SessionPassword = "Password";
+
+        public ActionResult Index()
+        {
+            ViewBag.Email = HttpContext.Session.GetString(SessionEmail);
+            ViewBag.Password = HttpContext.Session.GetInt32(SessionEmail);
+            if (ViewBag.Email == null && ViewBag.Password == null)
+
+                return RedirectToAction(nameof(Create));
+
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+
+
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(UserLogin Userdata)
+        {
+            //ViewBag.Error = "In valid user";
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Userdata.Password == "vita" && Userdata.Email == "training.vita@gmail.com")
+                    {
+                        HttpContext.Session.SetString(SessionEmail, Userdata.Email);
+                        HttpContext.Session.SetString(SessionPassword, Userdata.Password);
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "InValid data");
+                        return View();
+                    }
+                }
+
+                else
+                {
+
+                    return View();
+
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Remove("SessionEmail");
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+    }
+}
+
+namespace WA_Cookiee
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
+            builder.Services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
+            });
+
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+            app.UseSession();
+           
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.Run();
+        }
+    }
+}
+
+
+
+
+................................................................Q3..........................................................................................
+namespace WA_DAY18EXAM.Models
+{
+    public class UserLogin
+    {
+        public string Email {  get; set; }
+        public string Password { get; set; }
+        public bool Remember {  get; set; }
+
+    }
+}
+
+using Microsoft.AspNetCore.Mvc;
+using WA_DAY18EXAM.Models;
+
+namespace WA_DAY18EXAM.Controllers
+{
+    public class LoginController : Controller
+    {
+        public ActionResult Index()
+        {
+            var CookieValue = Request.Cookies["Ukey"]?.ToString();
+            ViewBag.CookieValue = CookieValue;
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+            UserLogin obj = null;
+            var CookieValue = Request.Cookies["Ukey"]?.ToString();
+            if (CookieValue != null)
+            {
+                obj = new UserLogin();
+                obj.Email = CookieValue;
+            }
+
+
+            return View(obj);
+        }
+        [HttpPost]
+        public IActionResult Create(UserLogin Userdata)
+        {
+            //ViewBag.Error = "In valid user";
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Userdata.Remember == true && Userdata.Email == "training.vita@gmail.com")
+                    {
+                        CookieOptions options = new CookieOptions();
+                        options.Expires = DateTime.Now.AddDays(7);
+                        Response.Cookies.Append("Ukey", Userdata.Email, options);
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "InValid data");
+                        return View();
+                    }
+                }
+
+                else
+                {
+
+                    return View();
+
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        public ActionResult Lgout()
+        {
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Append("Ukey", "", options);
+
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}
+
+using Microsoft.AspNetCore.Mvc;
+using WA_DAY18EXAM.Models;
+
+namespace WA_DAY18EXAM.Controllers
+{
+    public class SessiondemoController : Controller
+    {
+        const string SessionEmail = "Email";
+        const string SessionPassword = "Password";
+
+        public ActionResult Index()
+        {
+            ViewBag.Email = HttpContext.Session.GetString(SessionEmail);
+            ViewBag.Password = HttpContext.Session.GetInt32(SessionEmail);
+            if (ViewBag.Email == null && ViewBag.Password == null)
+
+                return RedirectToAction(nameof(Create));
+
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+
+
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(UserLogin Userdata)
+        {
+            //ViewBag.Error = "In valid user";
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Userdata.Password == "vita" && Userdata.Email == "training.vita@gmail.com")
+                    {
+                        HttpContext.Session.SetString(SessionEmail, Userdata.Email);
+                        HttpContext.Session.SetString(SessionPassword, Userdata.Password);
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "InValid data");
+                        return View();
+                    }
+                }
+
+                else
+                {
+
+                    return View();
+
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Remove("SessionEmail");
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+    }
+}
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using WA_DAY18EXAM.Models;
+
+namespace WA_DAY18EXAM.Controllers
+{
+    public class HomeController : Controller
+    {
+
+        const string SessionName = "_Name";
+        const string SessionAge = "_Age";
+        public IActionResult Index()
+        {
+            HttpContext.Session.SetString(SessionName, "DAC");
+            HttpContext.Session.SetInt32(SessionAge, 24);
+            return View();
+        }
+        public IActionResult About()
+        {
+            ViewBag.Name = HttpContext.Session.GetString(SessionName);
+            ViewBag.Age = HttpContext.Session.GetInt32(SessionAge);
+            ViewData["Message"] = "Asp.Net Core !!!.";
+
+            return View();
+        }
+
+    }
+}
+using WA_DAY18EXAM.Models;
+
+namespace WA_DAY18EXAM
+{
+    public class Program
+    {
+
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<CustomMiddlewareDemo>();
+
+            builder.Services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
+            });
+
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+            app.UseSession();
+          //  app.UseMiddleware<CustomMiddlewareDemo>();
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
+           
+
+            app.Run();
+           
+        }
+    }
+}

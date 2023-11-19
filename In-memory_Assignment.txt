@@ -1,4 +1,4 @@
-In-memory_Assignment
+zIn-memory_Assignment
 
 using System;
 namespace ConsoleApp6
@@ -40,10 +40,7 @@ namespace ConsoleApp6
         public loadVitaStudent()
         {
             students = new List<Vita_Student>() {
-            new Vita_Student()
-            {
-                Id = 1,Name="Divyanshu Yadav",Branch="Dac",Mobile="8881784090"
-            },
+            new Vita_Student() {Id = 1,Name="Divyanshu Yadav",Branch="Dac",Mobile="8881784090"},
             new Vita_Student() {Id = 2,Name="Ankit Yadav",Branch="Dac",Mobile="8922902290"},
             new Vita_Student() {Id = 3,Name="Mayur Patil",Branch="Dac",Mobile="9453888944"},
             new Vita_Student() {Id = 4,Name="Rahul Verma",Branch="Dac",Mobile="8725668910"},

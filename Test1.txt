@@ -1,0 +1,257 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Capgemini_HR._DEPT
+{
+    public delegate void Net(string Name, double salary);
+    public delegate void Bon(string Name, double salary);
+    public abstract class Employee
+    {
+        public event Net n1;
+        public event Bon b1;
+        public static int Id;
+        static Employee()
+        {
+            Console.WriteLine("-------------******----------------");
+            Console.WriteLine("Company of Capgemini_HR._DEPT");
+            Console.WriteLine("-------------******----------------");
+          }
+        public Employee(string name, double salary)
+        {
+            Id= Id++;
+            Name = name;
+            Salary = salary;
+            //NetSalary = netSalary;
+        }
+        public Employee()
+        {
+            Id = Id++;
+        }
+
+        public string Name
+        {
+            get
+            {
+                return Name;
+            }
+            set
+            {
+                if (value.Length > 2 && value.Length < 15)
+                {
+                    Name = value;
+                }
+                else
+                {
+                    throw new Exception("Incorrect size of Name");
+                }
+            }
+        }
+        public double Salary
+        {
+         get { return Salary; }
+            protected set {
+            Salary = value;
+            }
+        }
+        public double NetSalary
+        {
+            get { return NetSalary; }
+            protected set
+            {
+                NetSalary = value;
+            }
+        }
+        public abstract double GiveBonus(double amount);
+        public void CalculateSalary(double amount)
+        {
+            double p = Salary * 0.1;
+            NetSalary = Salary-p+amount;
+            OnCalc(Name, NetSalary);
+            Console.WriteLine("Net Salary is " + NetSalary);
+        }
+
+        public void OnCalc(String name,double Salary)
+        {
+           
+            n1(name,Salary);   
+            
+        }
+        public void OnBon(String name, double Balance)
+        {
+            
+                b1(name, Balance);
+            
+        }
+
+    }
+}
+---------------------------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Capgemini_HR._DEPT
+{
+    public class permanentEmployee : Employee
+    {
+        public permanentEmployee(String Name,double Salary):base(Name,Salary) {
+            this.Name = Name;
+                this.Salary = Salary;
+                //this.NetSalary = NetSalary; 
+        
+        }
+        public override double GiveBonus(double amount)
+        {
+          NetSalary = Salary+amount;
+            OnBon(Name,Salary);
+            return GiveBonus(amount);
+        }
+        public void moreBon()
+        {
+            double h = 0.03 * NetSalary;
+            NetSalary = NetSalary + h;
+            Console.WriteLine("After extra Bonus Net Salary is " + NetSalary);
+        }
+    }
+}
+
+
+---------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace Capgemini_HR._DEPT
+{
+    public class ContractEmployee : Employee
+    {
+        public ContractEmployee(string Name,double Salary):base() {
+        this.Name = Name;
+                this.Salary = Salary;   
+              //  this.NetSalary = NetSalary;
+        }   
+        public override double GiveBonus(double amount)
+        {
+            NetSalary = Salary + amount;
+            OnBon(Name, Salary);
+            return GiveBonus(amount);
+        }
+    }
+    }
+
+}
+-----------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Capgemini_HR._DEPT
+{
+    internal class Message
+    {
+        public void email(string Name, double Salary)
+        {
+
+            Console.WriteLine("Email has been sent to {0}... ", Name);
+        }
+        public void sms(string Name, double Salary)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("SMS has been sent to {0}... ", Name);
+        }
+      
+    }
+}
+
+-------------------------------------------------------------------------------------------------------------------
+using System.Runtime.Intrinsics.X86;
+
+namespace Capgemini_HR._DEPT
+{
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            Message m1 = new Message(); 
+             
+            Employee[] arr = new Employee[4];
+            arr[0] = new permanentEmployee("Divyanshu Yadav",7000);
+            arr[1] = new ContractEmployee("Harshal Mehta", 8000);
+            arr[2] = new permanentEmployee("Suraj Pandey", 7700);
+            arr[4]= new ContractEmployee("Mayur Patil",6000);
+            foreach(Employee emp in arr)
+            {
+                Console.WriteLine("--------******----------");
+                Console.WriteLine("Name is "+ emp.Name+" Salary is "+emp.Salary+" "+"NetSalary"+emp.NetSalary);
+                Console.WriteLine("--------******----------");
+            }
+            foreach(Employee emp in arr)
+            {
+                emp.b1 += m1.email;
+                emp.b1 += m1.sms;
+                emp.n1 += m1.email;
+                emp.n1 += m1.sms;
+            }
+        }
+    }
+}
+----------------------------------------------------------------------------------------------------------
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Enter a string to reverse:");
+        string input = Console.ReadLine();
+
+        string reversedString = ReverseString(input);
+
+        Console.WriteLine("Reversed string: " + reversedString);
+    }
+
+    static string ReverseString(string input)
+    {
+        char[] charArray = input.ToCharArray();
+        int length = charArray.Length;
+
+        for (int i = 0; i < length / 2; i++)
+        {
+            char temp = charArray[i];
+            charArray[i] = charArray[length - i - 1];
+            charArray[length - i - 1] = temp;
+        }
+
+        return new string(charArray);
+    }
+}
+-------------------------------------------------------------------------------------------------------------
+using System;
+using System.Text.RegularExpressions;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Enter a sentence:");
+        string input = Console.ReadLine();
+
+        int wordCount = CountWords(input);
+        int sentenceCount = CountSentences(input);
+
+        Console.WriteLine($"Number of words: {wordCount}");
+        Console.WriteLine($"Number of sentences: {sentenceCount}");
+    }
+
+}
+-------------------------------------------------------------------------------------------------
