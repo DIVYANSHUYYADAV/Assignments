@@ -20,9 +20,10 @@ ans- select ename,deptname,salary from emp join dept on emp.deptid=dept.deptid o
 ans-select ename,deptname,salary from emp join dept on emp.deptid=dept.deptid order by salary desc limit 1,1;
 -------------------------------------------------------------------------
 7. display the name, deptname of top five earning employees.
-ans-select ename,deptname,salary from emp join dept on emp.deptid=dept.deptid order by salary desc limit 0,5;
+ans-select ename,deptname,salary from emp join dept on emp.deptid=dept.deptid order by salary desc limit 0,5;//limit 5;
 -------------------------------------------------------------------------
 8. Display the deptname, name of top 5 earning employees from each dept.
+--do this withohut using functions. Analytical functions
 -------------------------------------------------------------------------
 9. Display the avg salary of each dept.
 ans- select avg(salary) as avg_salary,deptname from emp join d
@@ -32,4 +33,5 @@ ept on emp.deptid=dept.deptid group by deptname;
 ans-select min(salary) as min_salary,max(salary) as max_salary,deptname from emp join dept on emp.deptid=dept.deptid group by
  deptname;
 --------------------------------------------------------------------------
+
 

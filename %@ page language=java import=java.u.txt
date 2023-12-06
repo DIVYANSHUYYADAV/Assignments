@@ -1,0 +1,23 @@
+<%@ page language="java" import="java.util.*" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<jsp:useBean id="ob" class="mypack.Myclass4"/>
+<%
+List<String> l = new ArrayList<String>();
+l.add("Divyanshu");
+l.add("Ankit");
+l.add("Nishant");
+%>
+<jsp:setProperty property="list" name="ob" value="<%=l%>"/>
+<jsp:getProperty property="list" name="ob"/>
+
+
+</body>
+</html>

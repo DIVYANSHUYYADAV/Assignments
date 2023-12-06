@@ -1,0 +1,619 @@
+Notes(JSP)-05/12/23
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+Welcome to first JSP page
+<br>
+All the Best
+</body>
+</html>
+======================================================================================================================
+Elements 
+
+JSP declaration
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%!
+private String  message="hi";
+private String getmessage(){
+	
+	return message;
+}
+%>
+</body>
+</html>
+
+
+
+private String  message="hi";
+private String getmessage(){ --inside generated codes
+	
+	return message;
+}
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body style=color:Blue>
+<%!
+private String name = "Hello";
+
+private String getname(){
+	return name;
+}
+%>
+
+<%=getname() %>
+</body>
+</html>
+================================================================================================================================
+JSP element expression
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%!
+private String  message="hi";
+private String getmessage(){
+	
+	return message;
+}
+%>
+<%= "Welcome" %>
+<br>
+<%= 400*5 %>
+<br>
+<%= 10==10 %>
+</body>
+</html>
+
+
+
+IN generated codes
+
+ out.write("\r\n");
+      out.write("<!DOCTYPE html>\r\n");
+      out.write("<html>\r\n");
+      out.write("<head>\r\n");
+      out.write("<meta charset=\"UTF-8\">\r\n");
+      out.write("<title>Insert title here</title>\r\n");
+      out.write("</head>\r\n");
+      out.write("<body>\r\n");
+      out.write('\r');
+      out.write('\n');
+      out.print( "Welcome" );
+      out.write("\r\n");
+      out.write("<br>\r\n");
+      out.print( 400*5 );
+      out.write("\r\n");
+      out.write("<br>\r\n");
+      out.print( 10==10 );
+      out.write("\r\n");
+      out.write("</body>\r\n");
+      out.write("</html>");
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body style=color:Blue>
+<%!
+private String name = "Hello";
+
+private String getname(){
+	return name;
+}
+%>
+<%=getname()%>
+<br><br>
+<%= "Hello welcome" %>
+<br><br>
+<%= 3*2 %>
+<br><br>
+<%= 1==1 %>
+<br><br>
+<%! boolean b1;%>
+<% b1 = (1==1); %>
+<%= b1 %>
+</body>
+</html>
+===============================================================================================================================================
+
+If any error scene on browser
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%!
+private String  message="hi";
+private String getmessage(){
+	
+	return message
+}
+%>
+<%= "Welcome" %>
+<br>
+<%= 400*5 %>
+<br>
+<%= 10==10 %>
+</body>
+</html>
+
+Syntax error, insert ";" to complete BlockStatements //on browser
+=================================================================================================================================
+JSP Scriplets
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%!
+private String  message="hi";
+private String getmessage(){
+	
+	return message;
+}
+%>
+<%= "Welcome" %>
+<br>
+<%= 400*5 %>
+<br>
+<%= 10==10 %>
+<br><br>
+<%
+for(int i=0;i<=5;i++){
+out.println("Divyanshu");
+
+}
+%>
+</body>
+</html>
+
+
+
+Welcome
+2000
+true
+
+Divyanshu
+Divyanshu
+Divyanshu
+Divyanshu
+Divyanshu
+Divyanshu
+==================================================================================================================================
+Jsp Directives
+
+<%@ page import="java.util.*" language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+List<String> myList = new ArrayList<String>();
+myList.add("hello");
+myList.add("Welcome");
+out.println(myList);
+%>
+</body>
+</html>
+
+
+[hello, Welcome] --output
+
+
+in generated code 
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.jsp.*;
+import java.util.*;
+
+List<String> myList = new ArrayList<String>();
+myList.add("hello");
+myList.add("Welcome");
+out.println(myList);
+=================================================================================================================================
+
+<%@ page import="java.util.*" isThreadSafe="false" language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+List<String> myList = new ArrayList<String>();
+myList.add("hello");
+myList.add("Welcome");
+out.println(myList);
+%>
+</body>
+</html>
+
+This attribute indicates whether the generated servlet is thread-safe. Setting it to false means that multiple threads cannot simultaneously execute the servlet. This might be useful if your JSP contains non-thread-safe code or if you have specific concurrency concerns. Note that setting isThreadSafe to false can impact performance.
+===================================================================================================================================
+<%@ page import="java.util.*" errorPage="Second.jsp"  language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<%
+List<String> l1 = new ArrayList<>();
+l1.add("Hey ");
+l1.add("Buddy");
+l1.remove(5);
+%>
+
+</body>
+</html>
+
+
+<%@ page isErrorPage="true" language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body style=color:Green>
+Welocome to Exception Page
+</body>
+</html>
+===============================================================================================================================================
+Include Directive
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<img alt="Searching..." src="IMG_E1716.JPG" width="400" height="500">
+</body>
+</html>
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%@include file="Logo.html" %> 
+</body>
+</html>
+=========================================================================================================================================
+Standard Action
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<jsp:forward page="Second.jsp"></jsp:forward>
+</body>
+</html>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+Inside FORwared JSP page
+</body>
+</html>
+
+http://localhost:8080/JdpDemo/Standard.jsp--same name of first jsp
+Inside FORwared JSP page
+==================================================================================================================================================
+Standard Action--forward
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<jsp:forward page="Second.jsp">
+<jsp:param name="role" value="TL" />
+</jsp:forward>
+</body>
+</html>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+Inside FORwared JSP page
+<%=request.getParameter("role") %>
+</body>
+</html>
+=====================================
+<%@ page import="java.util.*" isThreadSafe="false" language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body style=color:Blue>
+<%
+List<String> l1 = new ArrayList<>();
+l1.add("Hey");
+l1.add("Buddy");
+
+%>
+<jsp:forward page="Second.jsp">
+<jsp:param value="<%=l1 %>" name="list"/>
+</jsp:forward>
+</body>
+</html>
+====================================================================================================================================================
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<jsp:forward page="FirstServ">
+<jsp:param name="role" value="TL" />
+</jsp:forward>
+</body>
+</html>
+
+
+
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * Servlet implementation class FirstServ
+ */
+public class FirstServ extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter pw = response.getWriter();
+		pw.println("This is first Servlet by Divyanshu");
+		 pw.println(request.getParameter("role"));
+	}
+
+}
+================================================================================================================================================
+
+
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * Servlet implementation class ForwardingServ
+ */
+public class ForwardingServ extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("company","smartString");
+		RequestDispatcher rd  = request.getRequestDispatcher("Forwarded.jsp");
+		rd.forward(request, response);
+	}
+
+}
+
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h3 style="color:red">Inside Forwarded JSP page</h3>
+<br><br>
+<%=request.getAttribute("company") %>
+</body>
+</html>
+==============================================================================================================================================
+<jsp:include
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+Before Including
+<jsp:include page="Included.jsp"></jsp:include>
+</body>
+</html>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<b><i><u>Inside the Included Jsp</u></i></b>
+</body>
+</html>
+==========================================================================================================================================
+
+
+
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Servlet implementation class DeptServ
+ */
+public class DeptServ extends HttpServlet {
+	private Connection con;
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see Servlet#init(ServletConfig)
+	 */
+	public void init(ServletConfig config) throws ServletException {
+	try {
+		Class.forName("com.mysql.cj.jdbc.Driver");
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+String ss = "jdbc:mysql://localhost:3306/bit";
+try {
+	con = DriverManager.getConnection(ss,"root","test@123");
+} catch (SQLException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+	
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter pw = response.getWriter();
+		
+		try {
+			PreparedStatement ps = con.prepareStatement("Select * from dept");
+			ResultSet rs =ps.executeQuery();
+			while(rs.next()) {
+				int i = rs.getInt(1);
+				String s = rs.getString(2);
+				String s1 = rs.getString(3);
+				pw.println(i+" "+s+" "+s1);
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
+===========================================================================================================================================
+
+

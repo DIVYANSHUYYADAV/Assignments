@@ -1,0 +1,116 @@
+Displaying data on server using ResourceBundle(properties)
+.properties and SingletonCon should be in a package(create on own)
+-import driver jar of mysql in lib(inside web-INF)
+
+============================================================================================================================================================
+filename-myproperties.properties
+
+driver=com.mysql.cj.jdbc.Driver
+url=jdbc:mysql://localhost:3306/bit
+user=root
+password=test@123
+============================================================================================================================================================
+Filename-SingletonCon.class (helper class)
+
+package mypack1;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+
+public class SingletonCon {
+static Connection con;
+static ResourceBundle rb;
+static {
+	try {
+		rb=ResourceBundle.getBundle("mypack1.dproperties");
+		Class.forName(rb.getString("driver"));
+		}
+	catch(Exception ee) {
+		ee.printStackTrace();
+	}
+	
+}
+public static Connection getCon() {
+	String url,user,password;
+	url = rb.getString("url");
+	user = rb.getString("user");
+	password = rb.getString("password");
+	try {
+		con = DriverManager.getConnection(url, user, password);
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return con;
+}
+	
+}
+============================================================================================================================================================
+Servlet-FirstServ
+
+
+
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import mypack1.SingletonCon;
+
+import java.beans.Statement;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Servlet implementation class FirstServ
+ */
+public class FirstServ extends HttpServlet {
+	private Connection con;
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see Servlet#init(ServletConfig)
+	 */
+	
+	@Override
+	public void init() throws ServletException {
+		con = SingletonCon.getCon();
+	}
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter pw = response.getWriter();
+		pw.println("<h1>This is my Servlet using properties</h1>");
+		pw.println();
+		pw.println("Welcome");
+		pw.println();
+		pw.println("<br>");
+		try {
+			java.sql.Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("Select * from dept");
+			while(rs.next()) {
+				int d = rs.getInt(1);
+				String n = rs.getString(2);
+				String l = rs.getString(3);
+				pw.println(d+" "+n+" "+l);
+				pw.println("<br>");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+}
+
+============================================================================================================================================================
+
+

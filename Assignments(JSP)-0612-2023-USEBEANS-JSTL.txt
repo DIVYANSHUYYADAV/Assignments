@@ -1,0 +1,677 @@
+Notes(JSP)-06/12-2023-USEBEANS
+
+usebean1
+
+
+package beanpack;
+public class MyClass
+{
+	public String disp()
+	{
+		return "welcome to MyClass disp";
+	}
+}
+
+
+
+=========================
+<jsp:useBean id="ob1" class="beanpack.MyClass"/>
+
+The message from bean is <br>
+<%=ob1.disp()%>
+<br><br>
+
+
+ how can you access disp from attributes way 
+
+<br><br>
+
+<%
+beanpack.MyClass ref=(beanpack.MyClass) pageContext.getAttribute("ob1");
+
+out.println(ref.disp());
+%>
+
+o/p
+
+The message from bean is
+welcome to MyClass disp
+
+how can you access disp from attributes way
+
+welcome to MyClass disp
+=========================================================================================================================================================
+Usebean 2
+
+package beanpack;
+public class MyClass1
+{
+	private int num;
+	public void setNum(int num)
+	{
+		this.num=num;
+	}
+	public int getNum()
+	{
+		return num;
+	}
+}
+==================================
+<jsp:useBean id="ob1" class="beanpack.MyClass1"/>
+
+
+<jsp:setProperty name="ob1" property="num" value="200"/>
+
+The number is <br>
+
+<jsp:getProperty name="ob1" property="num"/>
+=================================================================================================================================================
+UseBean3
+
+<html>
+<body>
+<form action="CallMyClass2.jsp">
+Enter name:<input type=text name=nm>
+<br>
+Enter age:<input type=text name=ag>
+<br><br>
+<input type=submit>
+</form>
+</body>
+</html>
+===========================================
+package beanpack;
+public class MyClass2
+{
+	private String name;
+	private int age;
+
+	public void setName(String name)
+	{
+		this.name=name;
+	}
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setAge(int age)
+	{
+		this.age=age;
+	}
+	public int getAge()
+	{
+		return age;
+	}
+}
+==================================================
+<jsp:useBean id="ob1" class="beanpack.MyClass2"/>
+
+
+<jsp:setProperty name="ob1" property="name" param="nm"/>
+
+<jsp:setProperty name="ob1" property="age" param="ag"/>
+
+The values are <br><br>
+<jsp:getProperty name="ob1" property="name"/>
+
+<jsp:getProperty name="ob1" property="age"/>
+===========================================================================================================================================================
+UseBean3
+
+<html>
+<body>
+<form action="CallMyClass3.jsp">
+Enter name:<input type=text name=name>
+<br>
+Enter age:<input type=text name=age>
+<br><br>
+<input type=submit>
+</form>
+</body>
+</html>
+==========================================
+package beanpack;
+public class MyClass3
+{
+	private String name;
+	private int age;
+
+	public void setName(String name)
+	{
+		this.name=name;
+	}
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setAge(int age)
+	{
+		this.age=age;
+	}
+	public int getAge()
+	{
+		return age;
+	}
+}
+==============================================
+<jsp:useBean id="ob1" class="beanpack.MyClass3"/>
+
+
+<jsp:setProperty name="ob1" property="*"/>
+
+
+
+The values are <br><br>
+<jsp:getProperty name="ob1" property="name"/>
+
+<jsp:getProperty name="ob1" property="age"/>
+===========================================================================================================================================
+
+UseBean with JavaObjects
+
+package beanpack;
+import java.util.*;
+public class MyClass4
+{
+	private List list;
+
+	public void setList(List list)
+	{
+		this.list=list;
+	}
+	public List getList()
+	{
+		return list;
+	}
+}
+=========================================
+<%@page import="java.util.*"%>
+
+<jsp:useBean id="ob1" class="beanpack.MyClass4"/>
+
+<% List a=new ArrayList(); 
+   a.add(100);
+   a.add("hello");
+%>
+
+
+<jsp:setProperty name="ob1" property="list" value="<%=a%>"/>
+
+<jsp:getProperty name="ob1" property="list"/>
+
+
+
+
+with different syntax
+
+<br><br>
+<jsp:setProperty name="ob1" property="list" value="<%=new ArrayList()%>"/>
+
+the value is <br>
+
+<jsp:getProperty name="ob1" property="list"/>
+========================================================================================================================================================
+Assignment
+
+
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Servlet implementation class RetriveData
+ */
+public class RetriveData extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<String> l1 = new ArrayList<String>();
+		l1.add("Kunal");
+		l1.add("Obaid");
+		l1.add("Mayuri");
+		l1.add("Divyanshu");
+		l1.add("Vedant");
+		l1.add("Yash");
+		l1.add("Sawpnil");
+		l1.add("Shubham");
+		l1.add("Vardhman");
+		HttpSession session = request.getSession();
+		session.setAttribute("Student",l1);
+		//RequestDispatcher rd = request.getRequestDispatcher("Mysession.jsp");
+		//rd.forward(request, response);
+		response.sendRedirect("Mysession.jsp");
+		
+	}
+
+}
+=======================================
+<%@ page language="java"  contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%=session.getAttribute("Student") %>
+</body>
+</html>
+===================================================================================================================================================
+EL-Folder DAY 6
+EL1.JSP
+
+<%pageContext.setAttribute("one","PAGE");%>
+<%request.setAttribute("two","REQUEST");%>
+<%session.setAttribute("three","SESSION");%>
+<%application.setAttribute("four","APPLICATION");%>
+
+<%=pageContext.getAttribute("one")%>
+<br>
+${pageScope.one}
+<br>
+${one}
+<br>
+
+<%=request.getAttribute("two")%>
+<br>
+${requestScope.two}
+<br>
+${two}
+<br>
+
+<%=session.getAttribute("three")%>
+<br>
+${sessionScope.three}
+<br>
+${three}
+<br>
+
+<%=application.getAttribute("four")%>
+<br>
+${applicationScope.four}
+<br>
+${four}
+<br>
+=====================================================================================================================================================
+
+el2.jsp
+
+the parameter value is 
+<br>
+<%=request.getParameter("sub")%>
+<br>
+${param.sub}
+<br>
+
+http://localhost:8080/EL/el_2.jsp?sub=Divyanshu--on address bar
+
+o/p
+the parameter value is
+Divyanshu
+Divyanshu
+========================================================================================================================================================
+el3.jsp
+
+this is with cookie
+<%
+Cookie c=new Cookie("player","rahul");
+response.addCookie(c);
+%>
+
+<br>
+the value of cookie implicit object ie. map is
+
+${cookie.player}
+
+<br>
+the value  of cookie is
+${cookie.player.value}
+
+<br>
+the name of cookie is
+${cookie.player.name}
+
+o/p
+this is with cookie
+the value of cookie implicit object ie. map is jakarta.servlet.http.Cookie@e9095a0e
+the value of cookie is rahul
+the name of cookie is player
+========================================================================================================================================
+el4.jsp
+
+the value are
+${paramValues.animals[0]}
+${paramValues.animals[1]}
+=============================
+callel4
+
+<form action="el_4.jsp" >
+<select name="animals" size="3" multiple>
+<option value="TIGER">Tiger</option>
+<option value="ELEPHANT"> Elephant
+</option>
+<option value="LION">Lion</option>
+</select>
+<input type="submit" value="Search">
+</form>
+=======================================================================================================================================================
+
+JSTL
+
+jstl.jsp
+
+<%@taglib uri="http://java.sun.com/jstl/core" prefix="d" %>
+<html>
+  <head>
+    <title>Count to 10 Example (using JSTL) using d</title>
+  </head>
+
+  <body>
+    <d:forEach var="i" begin="1" end="15" step="1">
+	 ${i}
+
+      <br/>
+    </d:forEach>
+  </body>
+</html>
+
+
+
+
+
+o/p
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+=======================================================================================================================================================
+calljstl1.html
+
+<form action="jstl1.jsp" >
+<select name="animals" size="3" multiple>
+<option value="TIGER">Tiger</option>
+<option value="ELEPHANT"> Elephant
+</option>
+<option value="LION">Lion</option>
+</select>
+<input type="submit" value="Search">
+</form>
+
+===================================================
+JSTL1.jsp
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+all the values are
+
+<c:forEach var="str" items="${paramValues.animals}">
+	${str}
+</c:forEach>
+
+=====================================================================================================================================================
+jstl2
+
+<%@page import="java.util.*"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+Vector v=new Vector();
+v.addElement("first");
+v.addElement(new Integer(420));
+v.addElement(new Boolean(true));
+request.setAttribute("myvect",v);
+%>
+<c:forEach var="xy" items="${myvect}">
+	${xy}
+</c:forEach>'
+
+o/p- first 420 true
+
+==========================================================================================================================================================
+call jstl3_jsp.html
+
+<form action="jstl3.jsp" >
+<select name="animals" size="3">
+<option value="TIGER">Tiger</option>
+<option value="ELEPHANT"> Elephant
+</option>
+<option value="LION">Lion</option>
+</select>
+<input type="submit" value="Search">
+</form>
+========================================
+jstl3.jsp
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:choose>
+	<c:when test="${paramValues.animals[0] =='TIGER'}">
+		its a tiger
+	</c:when>
+	<c:when test="${paramValues.animals[0] =='LION'}">
+		it is a lion
+	</c:when>
+	<c:when test="${paramValues.animals[0] eq 'ELEPHANT'}">
+		it is Elephant
+	</c:when>
+	<c:otherwise>
+		invalid choice
+	</c:otherwise>
+</c:choose>
+	
+=========================================================================================================================================================
+
+jstl4.jsp
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<c:set var="level" scope="request" value="first class"/>
+the value for level is
+${requestScope.level}
+===========================================================================================================================================================
+
+jstl6
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="status" scope="request" value="brilliant"/>
+	${status}
+
+<c:remove var="status" scope="request"/>
+
+	<br>
+	${status}
+===========================================================================================================================================================jjstl7.jsp
+
+<%-- unlike the other two includes the <c:import>   url can be from outside the web container.
+it adds the content from the value of the URL attribute to the current page, at the request time. it works a lot like <jsp:include>, but it's more powerful and flexible.
+--%>
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
+this is the rediffmail
+<br>
+<c:import url="https://www.rediff.com/"/>
+======================================================================================================================================================
+jstl8
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+this is main page
+<br>
+<c:import url="jstlheader.jsp">
+	<c:param name="role" value="WatchDog"/>
+</c:import>
+<br>
+back to main page
+==================================
+jstlheader.jsp
+
+<b><i><u>
+i am header.jsp
+my role is
+<br>
+${param.role}
+<br>
+Thank you
+</b></i></u>
+=========================================================================================================================================================
+jstl9
+
+<%--  <c:url >   adds the jsessionid to the end of the "value" relative URL ( if cookies are disabled)
+it is same like "response.encodeURL("/somepage"); " of servlet
+--%>
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+this is a hyperlink with URL rewriting enabled
+<a href="<c:url value='/jstlheader.jsp'/>"> <i>Go To jstlheader page</i></a>
+
+==================================
+jstlheader.jsp
+
+<b><i><u>
+i am header.jsp
+my role is
+<br>
+${param.role}
+<br>
+Thank you
+</b></i></u>
+
+===========================================================================================================================================================
+URLtag.jsp
+
+<%--  <c:url >   adds the jsessionid to the end of the "value" relative URL ( if cookies are disabled)
+it is same like "response.encodeURL("/somepage"); " of servlet
+--%>
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
+<% session.setAttribute("role","admin"); %>
+
+this is a hyperlink with URL rewriting enabled
+<br></br>
+
+
+<a href="<c:url value='/SomeOther.jsp'/>"> <i>Go To SomeOther page</i></a>
+
+==============================================
+
+SomeOther.jsp
+
+<%@page isELIgnored="false"%>
+The role is
+
+${sessionScope.role}
+===========================================================================================================================================================
+In jstl example
+
+jstl.jsp
+
+<%@page import="java.util.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+List<String> mylist=new ArrayList<String>();
+mylist.add("c++");
+mylist.add("java");
+mylist.add("databse");
+mylist.add("aptitude");
+pageContext.setAttribute("modules",mylist);
+%>
+
+<form action="second.jsp">
+<c:forEach var="str" items="${pageScope.modules}">
+	<input type=checkbox name=ch value=${str}>${str}
+</c:forEach>
+<input type=submit>
+</form>
+
+=============================================================
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+The selected values are
+<br></br>
+
+<c:forEach var="myval" items="${paramValues.ch}">
+	${myval}
+	<br>
+</c:forEach>
+</body>
+</html>
+
+==========================================================================================================================================================
+JSTL and Collection Api
+
+First_map.jsp
+
+<%@ page isELIgnored="false" import="java.util.*" language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+ <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+Map<Integer,String>mymap=new HashMap<Integer,String>();
+mymap.put(1,"abc");
+mymap.put(2,"xyz");
+mymap.put(3,"pqr");
+pageContext.setAttribute("list",mymap);
+%>
+<table border="5">
+<c:forEach var="myvar" items="${list}">
+<tr>
+<td>
+${myvar.key}
+</td>
+<td>
+${myvar.value}
+</td>
+</tr></c:forEach></table>
+</body>
+</html>
+=========================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
