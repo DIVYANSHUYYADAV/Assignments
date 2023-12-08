@@ -1,0 +1,299 @@
+Notes(User desfined tags)- 7-12-2023
+
+SimpleTag1
+
+UseFirst.jsp
+
+<%@taglib prefix="abc" uri="/WEB-INF/hello.tld"%>
+
+Before tag starts
+<br><b>
+<abc:first/>
+</b><br>
+After tag
+==============================================
+hello.tld
+
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd" version="2.0">
+
+	<tlib-version>1.2</tlib-version>
+	<short-name>simple</short-name>
+	<tag>
+		<name>first</name>
+		<tag-class>tagapack.TagCode1</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+</taglib>
+====================================================
+TagCode.java
+
+package tagapack;
+import java.io.IOException;
+
+import jakarta.servlet.jsp.JspContext;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.SimpleTagSupport;
+public class TagCode1 extends SimpleTagSupport
+{
+	public void doTag()throws JspException,IOException
+	{
+		getJspContext().getOut().print("This is a first simple tag");
+	}
+}
+====================================================================================================================================================
+UseSecond.jsp
+
+<%@taglib prefix="abc" uri="/WEB-INF/hello.tld"%>
+Before tag starts
+<br><b>
+<abc:second code="p1" desc="Soap" price="50"/>
+</b><br>
+After tag
+<br>
+<br>
+Before tag starts
+<br><b>
+<abc:second code='<%="p2"%>' desc="Perfume" price="150"/>
+</b><br>
+After tag
+<br>
+========================================
+hello.tld
+
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd" version="2.0">
+
+	<tlib-version>1.2</tlib-version>
+	<short-name>simple</short-name>
+	<tag>
+		<name>first</name>
+		<tag-class>tagpack.TagCode1</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+	
+	<tag>
+		<name>second</name>
+		<tag-class>tagpack.TagCode2</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>code</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>desc</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>price</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>
+=====================================================
+package tagpack;
+import java.io.*
+import jakarta.servlet.jsp.JspContext;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.SimpleTagSupport;
+public class TagCode2 extends SimpleTagSupport
+{
+	private String code;
+	private String desc;
+	private int price;
+	public void setCode(String code)
+	{
+		this.code=code;
+	}
+	public String getCode()
+	{
+		return code;
+	}
+	public void setDesc(String desc)
+	{
+		this.desc=desc;
+	}
+	public String getDesc()
+	{
+		return desc;
+	}
+	public void setPrice(int price)
+	{
+		this.price=price;
+	}
+	public int getPrice()
+	{
+		return price;
+	}
+	public void doTag()throws JspException,IOException
+	{
+		JspContext context=getJspContext();
+		context.getOut().write(getCode()+"  "+getDesc()+"  "+getPrice());
+		
+	}
+}
+==========================================================================================================================================================
+MVC
+
+1) client makes a request for form.html
+
+2) in this page, client is supposed to put his/her qualification and sends the request to the servlet e.g. "CareerServ"
+
+3) servlet calls for "CareerExpert" java bean(POJO OR MODEL)
+which will accept the qualification from servlet and returns the advice to the servlet
+
+4) servlet adds this advice into request object (attribute) and forwards the page to the "CareerDetails.jsp"
+this jsp generates a page ,returns this page to the client as response.
+
+ANS-
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<h2>Form</h2>
+<br>
+<body>
+<form style="border:cadetblue;" action="CareerServ" method="get">
+	Enter your Qualification:<input type="text" name="ql"/>
+	<input type="submit"/>
+	
+</form>
+</body>
+</html>
+=================================================
+CareerServ.Java
+
+
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import mypack.CareerExpert;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * Servlet implementation class CareerServ
+ */
+public class CareerServ extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CareerServ() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//request.getParameter("ql");
+		PrintWriter pw = response.getWriter();
+		//pw.println(request.getParameter("ql"));
+		CareerExpert c = new CareerExpert();
+		String adv= c.getAdvice(request.getParameter("ql"));
+		RequestDispatcher rd = request.getRequestDispatcher("CareerDetails.jsp");
+		request.setAttribute("advice",adv);
+		rd.forward(request, response);
+		}
+
+}
+=====================================================
+CareerExpert.java
+
+package mypack;
+
+public class CareerExpert {
+	
+public String getAdvice(String qualification) {
+	if(qualification.equalsIgnoreCase("be")) {
+			return "DAC course";
+	}else 
+		if(qualification.equalsIgnoreCase("12th Pass"))
+		{
+			return "Prepare for Government Service";
+		}
+		else 
+			if(qualification.equalsIgnoreCase("BSC"))
+			{
+				return "Prepare for UPSC";
+			}
+			else
+				return "no choice";
+	
+}
+}
+========================================
+CareerDetails.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%=request.getAttribute("advice") %>
+</body>
+</html>
+============================================================================================================================================================
+                                                       ******************************* 
+                                                       *************Maven*************
+                                                       *******************************
+
+in command promt mvn
+
+
+ <dependencies>
+  <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.33</version>
+    <scope>runtime</scope>
+</dependency>
+</dependencies>
+============================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

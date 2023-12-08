@@ -1,0 +1,426 @@
+Assignment-08-12-23
+
+create a table
+	"product"
+id - number primary key
+name - varchar
+price - decimal
+qty- number
+[do not add any record]
+==============================================================
+create table product (id int primary key,name varchar(20),price decimal,qty int)
+==============================================================
+
+create a class in "mypack"
+
+Product
+
+	 
+		
+		public no-arg constructor
+
+		setter and getter methods
+
+		toString() - display all the members
+
+===============================================================================
+package mypack;
+public class Product{
+int id,qty;
+String name;
+double price;
+Product(){}
+public void setId(int id){
+this.id = id;
+}
+public int getId(){
+return id;
+}
+public void setName(String name){
+this.name=name;
+}
+public String getName(){
+return name;
+}
+public void setPrice(double price){
+this.price=price;
+}
+public double getPrice(){
+return price;
+}
+public void setQty(int qty){
+this.qty=qty;
+}
+public int getQty(){
+return qty;
+}
+}
+
+===============================================================================
+create a class ProductApp in "mypack"
+
+	main
+
+		instantiate Product	
+			invoke setter methods to initialize it.
+
+		using the above instance,insert a row in product table. use PreparedStatement.
+     assign null to the above reference of Product class.
+	[ you have persisted Product class instance somehow in database]
+
+		now fire a query in database to fetch a record.
+		create a new instance of Product class.[ do not invoke setters]
+
+		while retrieving each and every information from ResultSet, invoke setter methods of newly created Product class object.
+
+		now display the Product class object. 
+	[ you have retrieved Product class instance from database somehow]
+
+========================================================================
+Product p1=new Product();
+p1.setId(1);
+p1.setName("Soap");
+p1.setPrice(100);
+p1.setQty(24);
+
+p1=null;
+PreparedStatement pst=con.prepareStatement("insert into product values(?,?,?,?);
+pst.setInt(1,p1.getId());
+pst.setString(2,p1.getName());
+pst.setDouble(3,p1.getPrice());
+pst.setInt(4,p1.getQty());
+
+int k=pst.executeUpdate();
+
+
+pst=con.prepareStatement("select * from product");
+
+ResultSet rs=pst.executeQuery();
+Product ref=new Product();
+
+rs.next();
+
+ref.setId(rs.getInt(1));
+ref.setName(rs.getString(2));
+ref.setPrice(rs.getDouble(3));
+ref.setQty(rs.getInt(4));
+
+S.o.p(ref);
+
+============================================================================================================================================================
+      ****Hibernate6.2_1******
+Employee.java
+
+package mypack;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="employee")
+public class Employee {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="empid",nullable=false)
+	public int getEmpid() {
+		return empid;
+	}
+	
+	public Employee() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public void setEmpid(int empid) {
+		this.empid = empid;
+	}
+	@Column(name="empname")
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Column(name="desig")
+	public String getDesig() {
+		return desig;
+	}
+	public void setDesig(String desig) {
+		this.desig = desig;
+	}
+	@Column(name="salary")
+	public double getSalary() {
+		return salary;
+	}
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
+	/**
+	 * 
+	 */
+	
+	private int empid;
+	private String name,desig;
+	private double salary;
+	
+	@Override
+	public String toString() {
+		return "Employee [empid=" + empid + ", name=" + name + ", desig=" + desig + ", salary=" + salary + "]";
+	}
+
+}
+==============================================================
+Main.Java
+
+package mypack;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+
+
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+		Configuration cfg=new Configuration();
+		cfg.configure("hibernate.cfg.xml");
+		SessionFactory factory=cfg.buildSessionFactory();
+		Session session=factory.openSession();
+		Transaction tr=session.beginTransaction();
+        Employee e1=new Employee();
+        e1.setName("abc");
+        e1.setDesig("officer");
+        e1.setSalary(30000);
+            
+        Employee e2=new Employee();       
+        e2.setName("xyz");
+        e2.setDesig("manager");
+        e2.setSalary(40000);
+        session.persist(e1);
+        session.persist(e2);
+        tr.commit(); 
+        factory.close();
+        System.out.println("done with employees");  
+	}
+}
+Hy
+=======================================================
+=========================================================================================================================================================
+FIRST_WITHOUT_cfg.xml
+-HyberPro
+=========================================================================================================================================================
+                                                                Seceond_Servlet
+===================================================
+Book.java in mypack
+
+package mypack;
+
+import jakarta.persistence.*;
+
+// Generated Aug 14, 2012 11:51:58 AM by Hibernate Tools 3.2.2.GA
+
+/**
+ * Book generated by hbm2java
+ */
+@Entity
+@Table(name="Book")
+public class Book  {
+
+	/**
+	 * 
+	 */
+	
+	private int id;
+	private String name;
+	private String subject;
+	private int cost;
+
+	public Book() {
+	}
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="bkid")
+	public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	@Column(name="bname")
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Column(name="subject")
+	public String getSubject() {
+		return this.subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	@Column(name="cost")
+	public int getCost() {
+		return this.cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+
+}
+
+======================================================================
+BookServ.java 
+
+
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import mypack.*;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+/**
+ * Servlet implementation class BookServ
+ */
+public class BookServ extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			try
+			{
+				Configuration cfg=new Configuration();
+				cfg.configure("hibernate.cfg.xml");
+				SessionFactory factory=cfg.buildSessionFactory();
+				Session session=factory.openSession();
+				Transaction tr=session.beginTransaction();
+				System.out.println("after change");
+				response.setContentType("text/html");
+				PrintWriter out=response.getWriter();
+				String name=request.getParameter("name");
+				String subject=request.getParameter("subject");
+				int cost=Integer.parseInt(request.getParameter("cost").trim());
+				Book b1=new Book();
+				b1.setName(name);
+				b1.setSubject(subject);
+				b1.setCost(cost);
+				session.persist(b1);
+				tr.commit();
+				session.close();
+				out.println("Done with book");
+			}
+			catch(Exception ee)
+			{
+				System.out.println("in service  "+ee);
+			}
+	}
+
+}
+
+======================================================================
+cfg in src/main
+hibernate.cfg.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+<property name="show_sql">true</property>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.password">test@123</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/bit</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <mapping class="mypack.Book"/> 
+    </session-factory>
+</hibernate-configuration>
+=====================================================================
+html in webapp
+Book.html
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<html>
+<body>
+<form action="BookServ" method=post>
+Enter name:<input type=text name="name">
+<br>
+Enter subject:<input type=text name="subject">
+<br>
+Enter cost:<input type=text name="cost">
+<br><br>
+<input type=submit>
+</form>
+</body>
+</html>
+</body>
+</html>
+===========================================================================
+
+
+Maven Depencies
+
+    <properties>
+         <hibernate.version>6.2.3.Final</hibernate.version>
+    </properties> 
+   <dependencies>
+  <dependency>
+    <groupId>org.hibernate.orm</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>${hibernate.version}</version>
+</dependency>
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.29</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>jakarta.persistence</groupId>
+    <artifactId>jakarta.persistence-api</artifactId>
+    <version>3.1.0</version>
+</dependency>
+	  <dependency> //servlet dependency is not needed if not working then only take it
+    <groupId>jakarta.servlet</groupId>
+    <artifactId>jakarta.servlet-api</artifactId>
+    <version>6.0.0</version>
+    <scope>provided</scope>
+</dependency>
+  </dependencies>
+
+===========================================================================================================================================================
+
+
+		
+		
