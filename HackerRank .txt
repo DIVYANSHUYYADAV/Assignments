@@ -1,0 +1,337 @@
+HackerRank 
+===========================================================================================================================================================
+1-To check a number is palindrome or not
+ans-
+
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+public static String reverseString(String s) {
+	StringBuilder br = new StringBuilder(s);
+	br.reverse();
+	return br.toString();
+
+}
+    public static void main(String[] args) {
+        
+        Scanner sc=new Scanner(System.in);
+        String A=sc.next();
+       String B = reverseString(A);
+       if(A.equals(B)) {
+    	  System.out.println("Yes"); 
+    	   
+       }else
+    	   System.out.println("No");
+        
+    }
+}
+===========================================================================================================================================================
+Ques-
+
+===============================================
+Given two strings of lowercase English letters,  and , perform the following operations:
+
+Sum the lengths of A and B.
+Determine if A is lexicographically larger than B (i.e.: does  come before  in the dictionary?).
+Capitalize the first letter in A and B and print them on a single line, separated by a space.
+Input Format
+
+The first line contains a string . The second line contains another string . The strings are comprised of only lowercase English letters.
+
+Output Format
+
+There are three lines of output:
+For the first line, sum the lengths of A and B.
+For the second line, write Yes if A is lexicographically greater than B otherwise print No instead.
+For the third line, capitalize the first letter in both A and B and print them on a single line, separated by a space.
+
+Sample Input 0
+
+hello
+java
+Sample Output 0
+
+9
+No
+Hello Java
+Explanation 0
+
+String A is "hello" and B is "java".
+
+A has a length of 5, and B has a length of 4; the sum of their lengths is 9.
+When sorted alphabetically/lexicographically, "hello" precedes "java"; therefore, A is not greater than B and the answer is No.
+
+When you capitalize the first letter of both A and B and then print them separated by a space, you get "Hello Java".
+=====================================================
+Ans-
+=====
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        
+        Scanner sc=new Scanner(System.in);
+        String A=sc.next();
+        String B=sc.next();
+       String j = A+B;
+       System.out.println(j.length());
+       int k=A.compareTo(B);
+       if(k<=0) {
+           System.out.println("No");
+       }else 
+           if(k>0) {
+               System.out.println("Yes");
+           }
+           
+           
+       
+      String A1 = A.substring(0, 1).toUpperCase()+A.substring(1);
+    String B1 = B.substring(0, 1).toUpperCase()+B.substring(1);
+       System.out.println(A1+" "+B1);
+    }
+}
+============================================================================================================================================================
+
+
+Ques-
+
+HackerRank
+|
+PrepareJavaStringsPattern Syntax Checker
+Exit Full Screen View
+Problem	Submissions	Leaderboard	Discussions	Editorial
+Using Regex, we can easily match or search for patterns in a text. Before searching for a pattern, we have to specify one using some well-defined syntax.
+
+In this problem, you are given a pattern. You have to check whether the syntax of the given pattern is valid.
+
+Note: In this problem, a regex is only valid if you can compile it using the Pattern.compile method.
+
+Input Format
+
+The first line of input contains an integer , denoting the number of test cases. The next  lines contain a string of any printable characters representing the pattern of a regex.
+
+Output Format
+
+For each test case, print Valid if the syntax of the given pattern is correct. Otherwise, print Invalid. Do not print the quotes.
+
+Sample Input
+
+3
+([A-Z])(.+)
+[AZ[a-z](a-z)
+batcatpat(nat
+Sample Output
+
+Valid
+Invalid
+Invalid
+
+Ans-
+=============
+without using Pattern.Compile method
+====================================
+import java.util.Scanner;
+import java.util.regex.*;
+
+public class Solution
+{
+	public static void main(String[] args){
+		Scanner in = new Scanner(System.in);
+		int testCases = Integer.parseInt(in.nextLine());
+		boolean flag=false;
+		int temp=0;
+		int k=0;
+		while(testCases>0){
+			String pattern = in.nextLine();
+           char arr[] = pattern.toCharArray();
+           for(int i=0;i<arr.length;i++) {
+        	  if(arr[i]=='('|| arr[i]=='[' || arr[i]=='{') {
+        		  temp++;
+           }
+        	  if(arr[i]==')'|| arr[i]==']' || arr[i]=='}') {
+        		k++;  
+        	  }
+        	  }
+           if(temp==k) {
+        	   System.out.println("Valid");
+           }else {
+        	   System.out.println("Invalid");
+           }
+		
+			testCases--;
+		}
+	}
+}
+=================================================
+with Pattern.compile();
+===================================================
+import java.util.Scanner;
+import java.util.regex.*;
+
+public class Solution
+{
+	public static void main(String[] args){
+		Scanner in = new Scanner(System.in);
+		int testCases = Integer.parseInt(in.nextLine());
+		boolean flag=false;
+		int temp=0;
+		int k=0;
+		while(testCases>0){
+			String pattern = in.nextLine();
+			try {
+				Pattern pat = Pattern.compile(pattern);
+				System.out.println("Valid");
+			}catch(Exception e) {
+				System.out.println("Invalid");
+			}
+			testCases--;
+		}
+	}
+}
+
+============================================================================================================================================================
+Two Add And Multiply two Big Integers
+============================================
+
+Ques
+
+In this problem, you have to add and multiply huge numbers! These numbers are so big that you can't contain them in any ordinary data types like a long integer.
+
+Use the power of Java's BigInteger class and solve this problem.
+
+Input Format
+
+There will be two lines containing two numbers, a and b.
+
+Constraints
+
+a and b are non-negative integers and can have maximum 200 digits.
+
+Output Format
+
+Output two lines. The first line should contain a+b , and the second line should contain a*b. Don't print any leading zeros.
+
+Sample Input
+
+1234
+20
+Sample Output
+
+1254
+24680
+
+Ans-
+===========
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+       Scanner sc = new Scanner(System.in);
+      BigInteger num  = sc.nextBigInteger();
+      BigInteger k  = sc.nextBigInteger();
+      BigInteger add = num.add(k);
+      BigInteger mul = num.multiply(k);
+       System.out.println(add);
+       System.out.println(mul);
+    }
+}
+============================================================================================================================================================
+Big Integer is prime by isProbalePrime by passing the certaninty to increase the percentage of the number to ne prime
+=====================================================================================================================
+A prime number is a natural number greater than 1 whose only positive divisors are 1 and itself. For example, the first six prime numbers are 2, 3,5 , 7, 11,13 and .
+
+Given a large integer,n , use the Java BigInteger class' isProbablePrime method to determine and print whether it's prime or not prime.
+
+Input Format
+
+A single line containing an integer, n (the number to be checked).
+
+Constraints
+
+n contains at most 100 digits.
+Output Format
+
+If n is a prime number, print prime; otherwise, print not prime.
+
+Sample Input
+
+13
+Sample Output
+
+prime
+Explanation
+
+The only positive divisors of  are  and , so we print prime
+Ans--
+
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        Scanner sc = new Scanner(System.in);
+      BigInteger num  = sc.nextBigInteger();
+      if(num.isProbablePrime(10)) {
+          System.out.println("prime");
+      }else
+          System.out.println("not prime");
+    }
+    }
+
+============================================================================================================================================================
+
+Ques-
+Hello world
+I am a file
+Read me until end-of-file.
+Sample Output
+
+1 Hello world
+2 I am a file
+3 Read me until end-of-file.
+
+Ans-
+
+import java.util.Scanner;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+         int temp =0;
+        // Read input until EOF
+       while(scanner.hasNext()) {
+    	   String s = scanner.nextLine();
+    	   temp++;
+    	   System.out.println(temp+" "+s);
+       }
+
+        // Close the scanner
+        scanner.close();
+    }
+}
+========================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
