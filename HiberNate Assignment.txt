@@ -1,0 +1,189 @@
+HiberNate Assignment
+
+Ques-1
+	generate an entity class "Dept" inside "mypack"
+using reverse engg technique.
+
+Data.jsp -> DataServlet 
+
+	in jsp u need to have
+
+	Search By loc:-  <textfield>
+
+		<submit>
+
+user will enter "location" and click on submit. Request will go to DataServlet , which will search records from database where location is  the one entered by user (using HQL). This will give a servlet List which will contain "Dept" objects for matching condition.
+
+servlet will store this List inside "request" attribute and forward it to the same jsp i.e. "Data.jsp" from where u have come inside servlet.
+
+Data.jsp will display the arraylist using EL and JSTL.
+
+Ans-
+
+==========
+Search.html
+============
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="first" method="post">
+	Enter loc:<input type="text" name="loc"/>
+	<input type="submit"/>
+</form>
+</body>
+</html>
+============================================
+Dept.java
+===========
+package mypack;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="dept")
+public class Dept {
+private int deptno;
+private String loc;
+private String dname;
+
+public Dept() {}
+public Dept(int deptno,String dname,String loc) {
+	this.deptno=deptno;
+	this.dname=dname;
+	this.loc=loc;
+}
+
+@Id
+@GeneratedValue(strategy=GenerationType.IDENTITY)
+@Column(name="deptno")
+public int getDeptno() {
+	return deptno;
+}
+public void setDeptno(int deptno) {
+	this.deptno = deptno;
+}
+@Column(name="loc")
+public String getLoc() {
+	return loc;
+}
+public void setLoc(String loc) {
+	this.loc = loc;
+}
+@Column(name="dname")
+public String getDname() {
+	return dname;
+}
+public void setDname(String dname) {
+	this.dname = dname;
+}
+@Override
+public String toString() {
+	return "[ Deptno: "+deptno+" "+"Dname: "+dname+" "+"Loc: "+loc+" ]";
+}
+}
+==========================================================================
+hiberenate.cfg.xml
+==================
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+<property name="show_sql">true</property>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.password">test@123</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/bit</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <mapping class="mypack.Dept"/> 
+  
+    </session-factory>
+</hibernate-configuration>
+====================================================================================
+first.java
+===============
+
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.websocket.Session;
+import mypack.Dept;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+import org.hibernate.query.SelectionQuery;
+
+/**
+ * Servlet implementation class first
+ */
+public class first extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Dept d = new Dept();
+		PrintWriter pw = response.getWriter();
+		String s=request.getParameter("loc");
+    //pw.println(s);
+		String ss ="jdbc:mysql://localhost:3306/bit";
+		String l = request.getParameter("loc");
+		Configuration cfg = new Configuration();
+		cfg.configure("hibernate.cfg.xml");
+		SessionFactory factory = cfg.buildSessionFactory();
+		org.hibernate.Session session =  factory.openSession();
+		Query<Dept> query = session.createQuery("from Dept where loc= :location",Dept.class);
+		query.setParameter("location",l);
+		List<?> l1 = (List<?>)query.list();
+		
+		RequestDispatcher rd = request.getRequestDispatcher("Second.jsp");
+		request.setAttribute("List",l1);
+		rd.forward(request, response);
+    
+	
+	}
+
+}
+====================================================================================
+Second.jsp
+=============
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<%=request.getAttribute("List") %>
+</body>
+</html>
+==========================================
