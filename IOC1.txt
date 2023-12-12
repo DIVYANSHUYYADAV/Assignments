@@ -1,0 +1,109 @@
+IOC1
+
+=========
+Account Interface
+=================
+package mypack;
+public interface Account
+{
+   public void deposit();
+}
+
+=============================
+SavingAccount
+=============
+package mypack;
+public class SavingAccountImpl implements Account 
+{
+	@Override
+	public void deposit() 
+	{
+		System.out.println("inside saving deposit");
+	}
+
+}
+======================
+CurrentAccount
+=========================
+package mypack;
+public class CurrentAccountImpl implements Account 
+{
+	@Override
+	public void deposit() 
+	{
+        System.out.println("inside current deposit");
+	}
+
+}
+====================================
+Class AccountBean
+===================
+package mypack;
+public class AccountBean
+{
+    private Account account;
+    public AccountBean()
+    {
+        System.out.println("in AccountBean no-arg constructor");
+    }
+    public void setAccount(Account account) 
+    {
+        System.out.println("inside setter method");
+        this.account = account;
+    }  
+    public void makeDeposit()
+    {
+        account.deposit();
+    }
+}
+
+=================================
+account1.xml
+============================
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+<bean id="accountbean" class="mypack.AccountBean">
+    <property name="account">
+        <ref bean="saccount"/>  
+     </property>
+</bean>
+<bean id="caccount" class="mypack.CurrentAccountImpl"/>
+<bean id="saccount" class="mypack.SavingAccountImpl"/>
+</beans>
+==========================================
+MAVEN dePENDENCIES
+=================================
+<properties>
+        <spring.version>6.0.9</spring.version>
+    </properties> 
+    <dependencies>
+       <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+         </dependencies>
+===========================================
+Main.java
+============
+package mypack;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+       
+        ClassPathXmlApplicationContext appContext=new ClassPathXmlApplicationContext(args[0]);  // dynamically we can configure
+  System.out.println("ClassPathXmlApplicationContext instantiated");
+        AccountBean ab=(AccountBean)appContext.getBean("accountbean");
+        ab.makeDeposit();
+	}
+
+}
+
+==============================================================================================================================================================

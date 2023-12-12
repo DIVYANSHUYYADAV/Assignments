@@ -12,7 +12,7 @@ public class MyClass
 	}
 }
 
-
+ 
 
 =========================
 <jsp:useBean id="ob1" class="beanpack.MyClass"/>
@@ -114,8 +114,41 @@ public class MyClass2
 
 The values are <br><br>
 <jsp:getProperty name="ob1" property="name"/>
-
+                                       <%--<%=k.getAge()%> --%> --this will only work if the type is integer in html
 <jsp:getProperty name="ob1" property="age"/>
+==========================================================================================================================================================
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="usebean3.jsp">
+	Enter Age:<input type="text" name="nm"/>
+	<br>
+	<br>
+	Enter Age:<input type="text" name="ag"/>
+	<br>
+	<input type="submit"/>
+</form>
+</body>
+</html>
+===================================================================
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<%=request.getParameter("nm") %>
+<%=request.getParameter("ag") %>
+</body>
+</html>
 ===========================================================================================================================================================
 UseBean3
 
@@ -212,6 +245,18 @@ with different syntax
 the value is <br>
 
 <jsp:getProperty name="ob1" property="list"/>
+==========================================================
+Simply trying
+
+<%
+List<String> l = new ArrayList<String>();
+l.add("Divyanshu");
+l.add("Ankit");
+l.add("Nishant");
+request.setAttribute("list",l);
+out.println(l);
+out.println(request.getAttribute("list"));
+%>
 ========================================================================================================================================================
 Assignment
 
@@ -352,11 +397,6 @@ the value of cookie implicit object ie. map is jakarta.servlet.http.Cookie@e9095
 the value of cookie is rahul
 the name of cookie is player
 ========================================================================================================================================
-el4.jsp
-
-the value are
-${paramValues.animals[0]}
-${paramValues.animals[1]}
 =============================
 callel4
 
@@ -369,6 +409,12 @@ callel4
 </select>
 <input type="submit" value="Search">
 </form>
+=============================
+el4.jsp
+
+the value are
+${paramValues.animals[0]}
+${paramValues.animals[1]}
 =======================================================================================================================================================
 
 JSTL

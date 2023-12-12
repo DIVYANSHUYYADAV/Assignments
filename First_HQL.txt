@@ -1,0 +1,98 @@
+First_HQL
+
+package mypack;
+import java.util.List;
+
+import org.hibernate.*;
+import org.hibernate.cfg.Configuration;
+
+import jakarta.persistence.Query;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+    Configuration cfg = new Configuration();
+    cfg.configure("hibernate.cfg.xml");
+    SessionFactory factory = cfg.buildSessionFactory();
+    Session session = factory.openSession();
+    Transaction tr = session.beginTransaction();
+     Person p1 = new Person("ABC",30); 
+     Person p2 = new Person("LMN",20); 
+     Person p3 = new Person("UVW",50); 
+     Person p4 = new Person("PQR",70); 
+     Person p5 = new Person("XYZ",90); 
+     session.persist(p1);
+     session.persist(p2);
+     session.persist(p3);
+     session.persist(p4);
+     session.persist(p5);
+     tr.commit();
+     Query query=session.createQuery("from Person",Person.class);
+		  System.out.println("After calling CreateQuery");
+		  List<?> mylist1=(List<?>) ((org.hibernate.query.Query<Person>) query).list();
+			System.out.println("After calling list method");
+			
+			System.out.println(mylist1);
+			factory.close();
+	}
+
+}
+-========================================================================
+package mypack;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="person")
+public class Person {
+ private int prnno;
+ private String name;
+ private int age;
+ 
+ public Person() {}
+ public Person(String name,int age) {
+	 this.age=age;
+	 this.name=name;
+ }
+ 
+ @Id
+ @GeneratedValue(strategy=GenerationType.IDENTITY)
+ @Column(name="prnno")
+public int getPrnno() {
+	return prnno;
+}
+public void setPrnno(int prnno) {
+	this.prnno = prnno;
+}
+@Column(name="name")
+public String getName() {
+	return name;
+}
+public void setName(String name) {
+	this.name = name;
+}
+@Column(name="age")
+public int getAge() {
+	return age;
+}
+public void setAge(int age) {
+	this.age = age;
+}
+@Override
+public String toString() {
+	return "Person [prnno=" + prnno + ", name=" + name + ", age=" + age
+			+ "]";
+}	
+	
+	
+	
+	
+}
+
+============================================================================================================================================================
