@@ -1,0 +1,605 @@
+Confriguatio-13/12/2023
+======================
+for any error create a file in src with name main.resources.xml_filename.xml
+==========================
+MyBean.java
+============
+package mypack;
+
+
+public class MyBean {
+
+	public String getMessage() {
+		return "Hello from MyBean";
+	}
+}
+==================================================
+MyBean1.java
+=============
+package mypack;
+
+import org.springframework.stereotype.Component;
+
+@Component  
+public class MyBean1 
+{
+	public int getValue()
+	{
+		return 100;
+	}
+}
+==========================================
+MyAppConfiguration.java
+======================
+package mypack;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class MyAppConfiguration {
+
+	@Bean  // makes MyBean as a component
+	public MyBean getMyDAOBean() // gets called only one
+	{
+		System.out.println("inside getMyDAOBean method");
+		return new MyBean();
+	}
+}
+==============================================================
+Main.java
+===========
+package mypack;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+
+	public static void main(String[] args) {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		context.scan("mypack");
+		context.refresh(); // org.springframework.context.annotation.AnnotationConfigApplicationContext@5f4da5c3 has not been refreshed yet
+		MyBean mbean = context.getBean(MyBean.class);
+		System.out.println(mbean.getMessage());
+		MyBean1 mbean1=context.getBean(MyBean1.class);
+		System.out.println(mbean1.getValue());
+		MyBean mbean2 = context.getBean(MyBean.class);
+		System.out.println(mbean2.getMessage());
+
+	}
+
+}
+===========================================================
+Maven Dependencies
+==================
+ <properties>
+        <spring.version>6.0.9 </spring.version>
+    </properties> 
+    <dependencies>
+         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+      <dependency>
+	    <groupId>org.aspectj</groupId>
+	    <artifactId>aspectjrt</artifactId>
+	    <version>1.9.19</version>
+       </dependency>
+
+    <dependency>
+	    <groupId>org.aspectj</groupId>
+	    <artifactId>aspectjweaver</artifactId>
+	    <version>1.9.19</version>
+   </dependency>
+         </dependencies>
+===========================================================================================================================================================
+Different ways to create IOC application
+=========================================
+                                                                  ******************
+                                                                  *******First******
+Student.java						          ******************
+=============
+package mypack;
+
+
+public class Student 
+{
+	private String name;
+	private int age;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", age=" + age + "]";
+	}
+	
+}
+=================================================================
+student.xml
+=============
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+<bean id="student" class="mypack.Student">
+    <property name="name" value="Abc"/>
+     <property name="age" value="20"/>
+</bean>
+
+</beans>
+==================================================================
+
+Main.java
+==========
+package mypack;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+      ApplicationContext context=new ClassPathXmlApplicationContext("student.xml");
+      Student student=context.getBean("student",Student.class);
+      System.out.println(student);
+
+	}
+
+}
+==============================================================
+Maven Dependencies
+==================
+ <properties>
+        <spring.version>6.0.9</spring.version>
+    </properties> 
+    <dependencies>
+       <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+         </dependencies>
+============================================================================================================================================================
+***************
+****Second*****
+***************
+
+Student.java
+=============
+package mypack;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Student 
+{
+	private String name;
+	private int age;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", age=" + age + "]";
+	}
+	
+}
+==================================================================
+Student.xml
+===========
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	 http://www.springframework.org/schema/context
+	 http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+    <context:component-scan base-package="mypack"/>
+</beans>
+=======================================================================
+Maven Dependencies
+==================
+ <properties>
+        <spring.version>6.0.9</spring.version>
+    </properties> 
+    <dependencies>
+       <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+         </dependencies>
+================================================================
+Main.java
+============
+package mypack;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+      ApplicationContext context=new ClassPathXmlApplicationContext("student.xml");
+      Student student=context.getBean("student",Student.class);
+      student.setName("Abc");
+      student.setAge(20);
+      System.out.println(student);
+
+	}
+
+}
+============================================================================================================================================================
+******Third******
+*****************
+*****************
+
+Student.java
+============
+package mypack;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Student 
+{
+	@Value("Mr.India")
+	private String name;
+	@Value("100")
+	private int age;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", age=" + age + "]";
+	}
+	
+}
+=============================================================================
+Student.xml
+===========
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	 http://www.springframework.org/schema/context
+	 http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+    <context:component-scan base-package="mypack"/>
+</beans>
+
+=============================================================
+Main.java
+============
+package mypack;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+      ApplicationContext context=new ClassPathXmlApplicationContext("student.xml");
+      Student student=context.getBean("student",Student.class);
+      System.out.println(student);
+
+	}
+
+}
+
+===========================================================================================================================================================
+Note-
+create file in src 
+main/resources/Student.xml
+=============================
+******************
+******Fourth******
+******************
+
+=====================
+Student.java
+================
+package mypack;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Student 
+{
+	private String name;
+	private int age;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", age=" + age + "]";
+	}
+	
+}
+==============================================================
+StudentConfig.java
+===================
+package mypack;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration  // informs Spring IOC that the class is an alternative for spring bean configuration xml file
+@ComponentScan(basePackages="mypack")
+
+public class StudentConfig 
+{
+
+}
+==========================================================
+Main.java
+============
+package mypack;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+      ApplicationContext context=new AnnotationConfigApplicationContext(StudentConfig.class);
+      Student student=context.getBean("student",Student.class);
+      student.setName("Pqr");
+      student.setAge(22);
+      System.out.println(student);
+	}
+
+}
+============================================================================================================================================================
+***************
+*****Fifth*****
+***************
+
+Student.java
+=============
+package mypack;
+
+public class Student 
+{
+	private String name;
+	private int age;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", age=" + age + "]";
+	}
+	
+}
+====================================================================
+StudentConfig.java
+===================
+package mypack;
+// IOC container invokes the method annotated with @Bean
+// collects the object which the method returns and
+// gives it back to main function whenever main function
+// ask for the object
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration  // informs Spring IOC that the class is an alternative for spring bean configuration xml file
+public class StudentConfig 
+{
+	@Bean    // alternative for @Component on the class Student
+	public Student getStudent()
+	{
+		Student s=new Student();
+		return s;
+	}
+
+}
+========================================================================
+Main.java
+==========
+package mypack;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+      ApplicationContext context=new AnnotationConfigApplicationContext(StudentConfig.class);
+      Student student=context.getBean("getStudent",Student.class);
+      student.setName("Xyz");
+      student.setAge(25);
+      System.out.println(student);
+	}
+
+}
+============================================================================================================================================================
+*************
+***Sixth*****
+*************
+
+Engine.java
+============
+package mypack;
+
+public class Engine 
+{
+	public String dispEngine()
+	{
+		return "I am an engine";
+	}
+}
+
+===================================================
+Car.java
+=========
+package mypack;
+
+public class Car 
+{
+	private Engine engine;
+	
+	
+	public Car(Engine engine) {
+		super();
+		this.engine = engine;
+	}
+
+
+	public String dispCar()
+	{
+		return "I am a car\t"+engine.dispEngine();
+	}
+	
+}
+========================================================
+CarConfig.java
+===============
+package mypack;
+// IOC container invokes the method annotated with @Bean
+// collects the object which the method returns and
+// gives it back to main function whenever main function
+// ask for the object
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration  // informs Spring IOC that the class is an alternative for spring bean configuration xml file
+public class CarConfig 
+{
+	@Bean
+	public Engine getEngine()
+	{
+		return new Engine();
+	}
+	@Bean    // alternative for @Component on the class Car
+	public Car getCar()
+	{
+		Car c=new Car(getEngine());
+		return c;
+	}
+
+}
+===========================================================
+Main.java
+=========
+package mypack;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+      ApplicationContext context=new AnnotationConfigApplicationContext(CarConfig.class);
+      Car car=context.getBean("getCar",Car.class);
+      System.out.println(car.dispCar());
+	}
+
+}
+===========================================================================================================================================================
+****************
+****SEVENTH*****
+****************
+
+CarConfig.java
+==============
+package mypack;
+// how to give customized name/s to the bean
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration  
+public class CarConfig 
+{
+	@Bean
+	public Engine getEngine()
+	{
+		return new Engine();
+	}
+	// you can give n number of values as names
+	@Bean(name= {"car1","car2"})   
+	public Car getCar()
+	{
+		Car c=new Car(getEngine());
+		return c;
+	}
+
+}
+===============================================================
+Main.java
+==========
+package mypack;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+      ApplicationContext context=new AnnotationConfigApplicationContext(CarConfig.class);
+      //Car car=context.getBean("car1",Car.class);
+      Car car=context.getBean("car2",Car.class);
+      System.out.println(car.dispCar());
+	}
+
+}
+==========================================================================================================================================================
+																																			
+

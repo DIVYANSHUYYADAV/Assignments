@@ -1,0 +1,162 @@
+AOP-Example1
+=============
+Product.java
+=============
+package mypack;
+public interface Product
+{
+    int multiply(int a,int b);
+}
+===================================
+ProductImpl.java
+===============
+package mypack;
+public class ProductImpl implements Product
+{
+    public int multiply(int a, int b)
+    {
+    	System.out.println("inside multiply");
+        return a*b;
+    }
+}
+=============================================
+LogBefore.java
+==============
+package mypack;
+import java.lang.reflect.Method;
+import org.springframework.aop.MethodBeforeAdvice;
+
+// it's a "before" advice
+
+public class LogBeforeCall implements MethodBeforeAdvice
+{
+    public void before(Method method, Object[] os, Object o) throws Throwable
+    {
+        System.out.println("Before Calling the Method");
+    }
+}
+
+/*
+Parameters:
+    method - method being invoked (e.g. here "multiply")
+    os - arguments to the method ( arg which will be passed to "multiply" method.
+    o - target of the method invocation (object by which "multiply" method has been invoked). May be null ( in case of static method)
+
+*/
+===========================================================================================================
+LogAfter.java
+=============
+package mypack;
+import java.lang.reflect.Method;
+import org.springframework.aop.AfterReturningAdvice;
+public class LogAfterReturning implements AfterReturningAdvice
+{
+    public void afterReturning(Object o, Method method, Object[] os, Object o1) throws Throwable 
+    {
+        System.out.println("After Normal Return from a method");
+    }
+}
+
+/*
+
+Parameters:
+    o - the value returned by the method, if any
+    method - method being invoked
+    os - arguments to the method
+    o1 - target of the method invocation. May be null.
+
+*/
+=======================================================================================================
+LogAround.java
+==============
+package mypack;
+
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+
+public class LogAround implements MethodInterceptor
+{
+    public Object invoke(MethodInvocation mi) throws Throwable
+    {
+    	System.out.println("beginning of invoke");
+        Object arg[]=mi.getArguments();
+        int num1=(Integer)arg[0];
+        int num2=(Integer)arg[1];
+        if(num1==0 && num2==0)
+        {
+            throw new Exception("Cannot Multiply 0 with 0");
+        }
+        Object result=mi.proceed();  // as a around advice you should allow "business method" to get executed
+        System.out.println("after proceed");
+        return result;
+        }
+    }
+====================================================================================================
+Aopdemo.xml
+=============
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+<!-- Advices -->
+<bean id="beforeCall" class="mypack.LogBeforeCall"/>
+<bean id="afterCall" class="mypack.LogAfterReturning"/>
+<bean id="aroundCall" class="mypack.LogAround"/>
+
+<!-- Implentation Class -->
+<bean id="productImpl" class="mypack.ProductImpl"/>
+
+<!-- Proxy Implementation Class -->
+<bean id="product" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="target">
+        <ref bean="productImpl"/>
+    </property>
+    <property name="interceptorNames">
+        <list>
+            <value>beforeCall</value>
+            <value>aroundCall</value>
+	    <value>afterCall</value>
+         </list>
+     </property>
+     <property name="proxyInterfaces">
+         <value>mypack.Product</value>
+     </property>
+</bean>
+</beans>
+=============================================================================
+Main.java
+===========
+package mypack;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+    public static void main(String[] args)
+    {
+        ApplicationContext ac=new ClassPathXmlApplicationContext("aopdemo.xml");
+        Product product=(Product)ac.getBean("product");
+System.out.println(product.getClass().getName());
+        int result=product.multiply(10,20);
+        System.out.println("First Result\t"+result);
+       
+    }
+}
+============================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
