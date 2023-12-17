@@ -1,0 +1,250 @@
+With_JDBC_Template
+
+Customer.java
+=============
+package mypack;
+
+public class Customer
+{
+	private int customerId;
+	private String customerName,address;
+	public int getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+	public Customer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Customer(int customerId, String customerName, String address) {
+		super();
+		this.customerId = customerId;
+		this.customerName = customerName;
+		this.address = address;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	@Override
+	public String toString() {
+		return "Customer [customerId=" + customerId + ", customerName="
+				+ customerName + ", address=" + address + "]";
+	}
+	
+}
+======================================================================
+CustomerDAo.java
+=================
+package mypack;
+import java.util.*;
+public interface CustomerDAO 
+{
+	public void insertCustomer(Customer customer);
+	public List<?> viewCustomers();
+}
+==============================================================================
+CustomerDAOImpl.java
+=====================
+package mypack;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+public class CustomerDAOImpl implements CustomerDAO 
+{
+	private JdbcTemplate jdbcTemplate;
+	@Override
+	public void insertCustomer(Customer customer) 
+	{
+		String query="insert into customers values(?,?,?)";
+		jdbcTemplate.update(query,new Object[]{customer.getCustomerId(),customer.getCustomerName(),customer.getAddress()});
+		
+	}
+
+
+	
+	public void setDataSource(DataSource dataSource) {
+		jdbcTemplate=new JdbcTemplate(dataSource);
+	}
+
+
+	@Override
+	public List<?> viewCustomers() {
+		String query="select * from customers";
+		return (List<?>)jdbcTemplate.queryForObject(query,new RowMapper<Object>()
+		{
+			@Override
+			public Object mapRow(ResultSet resultSet,int rowNum)throws SQLException
+			{
+			 	List<Customer>ar=new ArrayList<Customer>();
+				do
+				{
+				ar.add(new Customer(resultSet.getInt("customerid"),resultSet.getString("customername"),resultSet.getString("address")));
+				}while(resultSet.next());
+				return ar;
+			}
+		});
+	}
+
+}
+===================================================================================================================================
+Context.xml
+=============
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+<bean id="datasource" destroy-method="close" class="org.apache.commons.dbcp2.BasicDataSource">
+	<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+	<property name="url" value="jdbc:mysql://localhost:3306/mydb"/>
+	<property name="username" value="root"/>
+	<property name="password" value="root"/>
+</bean>
+<bean id="customerDAO" class="mypack.CustomerDAOImpl">
+	<property name="dataSource" ref="datasource"/>
+</bean>
+</beans>
+=======================================================================
+Main.java
+==========
+package mypack;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import java.util.*;
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+		 ApplicationContext ac=new ClassPathXmlApplicationContext("context.xml");
+	        CustomerDAO cd=(CustomerDAO)ac.getBean("customerDAO");
+	        Customer c1=new Customer();
+	        c1.setCustomerId(1);
+	        c1.setCustomerName("aaa");
+	        c1.setAddress("Banglore");
+	        cd.insertCustomer(c1);
+		Customer c2=new Customer();
+	        c2.setCustomerId(2);
+	        c2.setCustomerName("bbb");
+	        c2.setAddress("Mumbai");
+	        cd.insertCustomer(c2);
+		Customer c3=new Customer();
+	        c3.setCustomerId(3);
+	        c3.setCustomerName("ccc");
+	        c3.setAddress("delhi");
+	        cd.insertCustomer(c3);
+
+		List<?> mylist=cd.viewCustomers();
+		System.out.println(mylist);
+	
+	        System.out.println("Done with JDBCTemplate");
+	        
+	}
+}
+============================================================================================================================================================
+MAVEN Dependencies
+==================
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>template_1</groupId>
+  <artifactId>template_1</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+   <properties>
+        <spring.version>6.0.9</spring.version>
+    </properties> 
+    <dependencies>
+       <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-dbcp2</artifactId>
+    <version>2.1.1</version>
+   </dependency>
+   <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+<dependency>
+    <groupId>mysql</groupId> 
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.29</version>
+ </dependency> 
+
+<dependency>
+<groupId>org.springframework</groupId>
+<artifactId>spring-tx</artifactId>
+<version>${spring.version}</version>
+</dependency>
+ 
+</dependencies>
+</project>
+=======================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

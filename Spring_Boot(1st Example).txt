@@ -1,0 +1,103 @@
+Spring_Boot(1st Example)
+
+Book.java
+=========
+package com.example.demo;
+
+public class Book {
+private String bookName;
+private long price ;
+public String getBookName() {
+	return bookName;
+}
+public void setBookName(String bookName) {
+	this.bookName = bookName;
+}
+public long getPrice() {
+	return price;
+}
+public void setPrice(long price) {
+	this.price = price;
+}
+@Override
+public String toString() {
+	return "[ "+bookName+" "+price+" ]";
+}
+}
+==================================================
+BookNew.html
+=============
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<form th:action="@{/book}" method="post">
+		<table border="2">
+			<tr>
+				<td>Enter BookName</td>
+				<td><input type="text" name="bookName"/></td>
+			</tr>
+			<tr>
+				<td>Enter Price</td>
+				<td><input type="number" name="price"/></td>
+			</tr>
+			<tr>
+				<td><input type="submit"/></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
+=========================================================
+BookNewController.java
+======================
+package com.example.demo;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+
+@Controller
+public class BookNewController {
+	@GetMapping("/")
+	public String before() {
+		return "BookNew";
+	}
+
+	@PostMapping("book")
+	public String LoadData(@RequestParam("bookName") String bookName,@RequestParam("price") long price,Model model) {
+		Book b1 = new Book();
+		b1.setBookName(bookName);
+		b1.setPrice(price);
+		 model.addAttribute("mylist",b1);
+		 return "success";
+		 		
+	}
+}
+=================================================================
+Success.java
+============
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<p th:text="${mylist.bookName}" />
+	<br>
+	<p th:text="${mylist.price}"/>
+</body>
+===================================================================
+Application.properties
+==========================
+spring.mvc.view.prefix="/"
+spring.mvc.view.suffix=".html"
+

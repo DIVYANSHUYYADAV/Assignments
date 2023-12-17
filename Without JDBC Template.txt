@@ -1,0 +1,225 @@
+Without JDBC Template
+ 
+===========================================================================================================
+create table customers(customerid int(5) primary key,customername varchar(30),address varchar(30));
+===========================================================================================================
+
+Customer.java
+==============
+
+package mypack;
+
+public class Customer
+{
+	private int customerId;
+	private String customerName,address;
+	public int getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	@Override
+	public String toString() {
+		return "Customer [customerId=" + customerId + ", customerName="
+				+ customerName + ", address=" + address + "]";
+	}
+	
+}
+======================================================================================
+CustomerDAO.java
+=================
+package mypack;
+
+public interface CustomerDAO 
+{
+	public void insertCustomer(Customer customer);
+}
+====================================================================================
+CustomerDAOImpl.java
+=======================
+package mypack;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+public class CustomerDAOImpl implements CustomerDAO 
+{
+	private DataSource dataSource;
+	@Override
+	public void insertCustomer(Customer customer) 
+	{
+	/* Specifying statement. */
+		String query="insert into customers values(?,?,?)";
+	/* defining the connection and prepared statement parameters */
+		Connection connection=null;
+		PreparedStatement preparedstatement=null;
+		try
+		{
+			/* opening a connection */
+			connection=dataSource.getConnection();
+			/* preparing the statement */
+			preparedstatement=connection.prepareStatement(query);
+			/* binding the parameters to the PreparedStatement */
+			preparedstatement.setInt(1,customer.getCustomerId());
+			preparedstatement.setString(2,customer.getCustomerName());
+			preparedstatement.setString(3,customer.getAddress());
+			/* executing the statement */
+			preparedstatement.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				/* closing the prepared statement */
+				if(preparedstatement!=null)
+				{
+					preparedstatement.close();
+				}
+				/* closing the connection */
+				if(connection!=null)
+				{
+					connection.close();
+				}
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
+}
+=================================================================================
+Context.xml
+===============
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+<bean id="datasource" destroy-method="close" class="org.apache.commons.dbcp2.BasicDataSource">
+	<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+	<property name="url" value="jdbc:mysql://localhost:3306/mydb"/>
+	<property name="username" value="root"/>
+	<property name="password" value="root"/>
+</bean>
+<bean id="customerDAO" class="mypack.CustomerDAOImpl">
+	<property name="dataSource" ref="datasource"/>
+</bean>
+</beans>
+==========================================================================
+Pom.xml
+=======
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>Spring4_Jdbc</groupId>
+  <artifactId>Spring4_Jdbc</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source/>
+          <target/>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+    <properties>
+        <spring.version>6.0.9</spring.version>
+    </properties> 
+    <dependencies>
+       <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-dbcp2</artifactId>
+    <version>2.1</version>
+   </dependency>
+<dependency>
+    <groupId>mysql</groupId> 
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.29</version>
+    <scope>runtime</scope>
+ </dependency> 
+</dependencies>
+</project>
+==============================================================
+MAIN.JAVA
+=========
+package mypack;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+		 ApplicationContext ac=new ClassPathXmlApplicationContext("context.xml");
+	        CustomerDAO cd=(CustomerDAO)ac.getBean("customerDAO");
+	        Customer c1=new Customer();
+	        c1.setCustomerId(1);
+	        c1.setCustomerName("sachin");
+	        c1.setAddress("Mumbai");
+	        cd.insertCustomer(c1);
+	        System.out.println("Done");
+	}
+}
+============================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
