@@ -1,0 +1,108 @@
+Third-(Spring MVC)
+
+Book.java
+=========
+package com.example.demo;
+
+public class Book {
+private String name;
+private long price;
+public String getName() {
+	return name;
+}
+public void setName(String name) {
+	this.name = name;
+}
+public long getPrice() {
+	return price;
+}
+public void setPrice(long price) {
+	this.price = price;
+}
+@Override
+public String toString() {
+	return "[ Book Name: "+name+" "+"Price: "+price+" ]";
+}
+
+}
+==================================================================
+BookNewController.java
+=======================
+package com.example.demo;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.servlet.http.HttpSession;
+
+@Controller
+public class BookNewController {
+
+	@GetMapping("/")
+	public String before() {
+		return "BookNew";
+	}
+	
+	@PostMapping("/book")
+	public String loadData(@RequestParam("name") String name,@RequestParam("price") long price,Model model,HttpSession session) {
+		Book b = new Book();
+		b.setName(name);
+		b.setPrice(price);
+		model.addAttribute("bookList", b);
+		session.setAttribute("List", b);
+		return "success";
+	}
+}
+===========================================================================
+BookNew.html
+===============
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="book" method="post">
+		<table style="border: 0vi,cadetblue;">
+			<tr>
+				<td>Enter Name</td>
+				<td><input type="text" name="name" placeholder="Enter the name of Book"/></td>
+			</tr>
+			<tr>
+				<td>Enter Price</td>
+				<td><input type="number" name="price" placeholder="Enter the Price of Book"/></td>
+			</tr>
+		</table>
+		<input type="submit"/>
+	</form>
+</body>
+</html>
+=============================================================================
+Application.properties
+======================
+spring.mvc.view.prefix="/"
+spring.mvc.view.suffix=".html"
+
+===============================================================================
+Success.java
+============
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<p th:text="${bookList.name}"/>
+	<br>
+	<p th:text="${bookList.price}"/>
+	<br><br>
+	session value is
+	<p th:text="${session.List}"/>
+</body>
+</html>
+============================================================================================================================================================

@@ -1,0 +1,65 @@
+JavaScript-
+
+LoveCalc
+var name1 = prompt("Enter first Name");
+var name2 = prompt("Enter second Name");
+function loveCalc(name1,name2){
+    var num = Math.random();
+    num= num*100;
+    num=Math.floor(num)+1;
+    if(num >80){
+    alert("Love Percentage between "+name1+" and "+name2+" is "+num+"%"+" You both would look perfect in together");
+    }
+    else 
+        if(num >40 && num<=80){
+          alert("Love Percentage between "+name1+" and "+name2+" is "+num+"%"+" Sorry! but you both've quite Dissimilarties");
+      
+        }
+    else if(num<=40){
+                 alert("Love Percentage between "+name1+" and "+name2+" is "+num+"%"+" You go together like oil and water");
+ 
+    }
+    }
+loveCalc(name1,name2);
+====================================================================
+BMI-Calculator
+---
+function bmiCalculator (weight, height){
+var w =weight;
+var h=height;
+var r = weight/(h*h);
+    r = Number(r.toFixed(2));
+var interpretation=" ";
+    if(r<18.5){
+       interpretation="Your BMI is <"+ r+">, so you are underweight."
+    }else 
+        if(r>18.5 && r<24.9){
+          interpretation="Your BMI is <"+ r+">, so you have a normal weight."  
+        }
+    else if(r>24.9){
+       interpretation ="Your BMI is <"+ r+">, so you are overweight."
+    }
+       
+    return interpretation;
+}
+bmiCalculator (98,5.9);
+==================================================================
+To check for leap year
+=====================
+var year1 = prompt("Enter any Year");
+if(year1%4!=0){
+    alert(year1+" is not a leap year");
+   
+}
+    if(year1%4==0){
+        if(year1%100!=0){
+           alert(year1+" is a leap year"); 
+        }
+        else 
+            if(year1%100==0 && year1%400==0){
+               alert(year1+" is a leap year");
+                }
+        else
+              alert(year1+" is not a leap year");
+    }
+======================================================================
