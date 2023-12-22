@@ -1,0 +1,356 @@
+Day-1(DSA)
+Create basic Stack
+
+Performing task like create a stack ,push ,pop,peek(),printing the stack;
+===============================================
+package mypack;
+
+import java.util.Scanner;
+
+public class BasicStack {
+int stack[],MaxSize,tos;
+ void createStack(int size) {
+	 stack= new int[size];
+	 MaxSize = size;
+	 tos=-1;
+ }
+ void push(int i) {
+	 
+	 tos++;
+	 stack[tos]=i;
+ }
+ boolean isFull() {
+	 if(tos==MaxSize-1) {
+		 return true;
+	 }else
+		 return false;
+ }
+ int pop() {
+	 int n = stack[tos];
+     tos--;
+     return n;
+ }
+ boolean isEmpty() {
+	 if(tos==-1) {
+		 return true;
+		 
+	 }else
+		 return false;
+ }
+ int peek() {
+	 return (stack[tos]);
+ }
+ void print_stack() {
+		for(int i=MaxSize-1;i>-1;i--)
+		//i=MaxSize-1 or i = top
+		{
+			System.out.println(stack[i]);
+		}
+	}
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the size of stack you want to create");
+		int size = sc.nextInt();
+		BasicStack obj = new BasicStack();
+		obj.createStack(size);
+		int ch;
+		do {
+			System.out.println("Enter your Choice between 1 to 4");
+			ch=sc.nextInt();
+			switch(ch){
+			  case 1:
+				  if(!obj.isFull()) {
+					  System.out.println("Enter the number u want to push");
+					  int n = sc.nextInt();
+					  obj.push(n);
+					  System.out.println("Successfully Pushed");
+					
+				  }else
+					  System.out.println("Stack is full");
+				  break;
+			  case 2:
+				  if(!obj.isEmpty()) {
+					 obj.pop();
+				  }
+				  else
+					  System.out.println("Stack is Empty");
+				  break;
+			  case 3:
+				  if(!obj.isEmpty()) {
+					  System.out.println("Top most of element is "+obj.peek());
+				  break;
+				  }
+			  case 4:
+				  if(!obj.isEmpty()) {
+					  obj.print_stack();
+					  break;
+				  }
+				  default:
+					  System.out.println("Invalid Choice");
+			}
+		}while(ch!=0);
+
+	}
+
+}
+===========================================================================================================================================================
+Check whether the string is balanced 
+1-{{{}}} - Balanced
+2-{{}}{{} - } expected
+3-{{}}}} - } unexcepted
+
+answer-
+package mypack;
+
+import java.util.Scanner;
+
+public class BasicStack {
+char stack[];
+int MaxSize,tos;
+ void createStack(int size) {
+	 stack= new char[size];
+	 MaxSize = size;
+	 tos=-1;
+ }
+ void push(char i) {
+	 
+	 tos++;
+	 stack[tos]=i;
+ }
+ boolean isFull() {
+	 if(tos==MaxSize-1) {
+		 return true;
+	 }else
+		 return false;
+ }
+ int pop() {
+	 char n = stack[tos];
+     tos--;
+     return n;
+ }
+ boolean isEmpty() {
+	 if(tos==-1) {
+		 return true;
+		 
+	 }else
+		 return false;
+ }
+char peek() {
+	 return (stack[tos]);
+ }
+ void print_stack() {
+		for(int i=MaxSize-1;i>-1;i--)
+		//i=MaxSize-1 or i = top
+		{
+			System.out.println(stack[i]);
+		}
+	}
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the size of stack you want to create");
+		int size = sc.nextInt();
+		sc.nextLine();
+		BasicStack obj = new BasicStack();
+		obj.createStack(size);
+		System.out.println("Enter the String");
+		String s = sc.nextLine();
+		boolean flag =true;
+		for(int i=0;i<s.length();i++) {
+			
+				if(s.charAt(i)=='{') {
+					obj.push(s.charAt(i));
+				}else
+					if(s.charAt(i)=='}') {
+						if(!obj.isEmpty()) {
+							obj.pop();
+							
+						}
+						else { 
+							System.out.println("} unexcepted");
+						   flag=false;
+						   break;
+						}
+						
+					}
+			
+		}
+		if(!obj.isEmpty()) {
+			System.out.println("} excepted");
+		}else
+			if(flag)
+			System.out.println("balanced");
+		
+
+	}
+
+}
+============================================================================================================================================================
+Ques-Convert a number from decimal to binary using stack
+answer-
+package mypack;
+
+import java.util.Scanner;
+
+public class BasicStack {
+int stack[];
+int MaxSize,tos;
+ void createStack(int size) {
+	 stack= new int[size];
+	 MaxSize = size;
+	 tos=-1;
+ }
+ void push(int i) {
+	 
+	 tos++;
+	 stack[tos]=i;
+ }
+ boolean isFull() {
+	 if(tos==MaxSize-1) {
+		 return true;
+	 }else
+		 return false;
+ }
+ int pop() {
+	 int n = stack[tos];
+     tos--;
+     return n;
+ }
+ boolean isEmpty() {
+	 if(tos==-1) {
+		 return true;
+		 
+	 }else
+		 return false;
+ }
+int peek() {
+	 return (stack[tos]);
+ }
+ void print_stack() {
+		for(int i=MaxSize-1;i>-1;i--)
+		//i=MaxSize-1 or i = top
+		{
+			System.out.print(stack[i]);
+		}
+	}
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the size of stack you want to create");
+		int size = sc.nextInt();
+		sc.nextLine();
+		System.out.println("Enter the number which you want to convert to binary");
+		int num = sc.nextInt();
+		BasicStack obj = new BasicStack();
+		obj.createStack(size);
+		while(num!=0) {
+			int k = num%2;
+			num=num/2;
+			obj.push(k);
+			
+		}
+		while(!obj.isEmpty()) {
+		System.out.print(obj.pop());
+		}
+
+	}
+
+}
+============================================================================================================================================================
+Ques- find the minimum element in the given stack
+answer-
+package mypack;
+
+import java.util.Scanner;
+
+public class BasicStack {
+int stack[];
+int MaxSize,tos;
+ void createStack(int size) {
+	 stack= new int[size];
+	 MaxSize = size;
+	 tos=-1;
+ }
+ void push(int i) {
+	 
+	 tos++;
+	 stack[tos]=i;
+ }
+ boolean isFull() {
+	 if(tos==MaxSize-1) {
+		 return true;
+	 }else
+		 return false;
+ }
+ int pop() {
+	 int n = stack[tos];
+     tos--;
+     return n;
+ }
+ boolean isEmpty() {
+	 if(tos==-1) {
+		 return true;
+		 
+	 }else
+		 return false;
+ }
+int peek() {
+	 return (stack[tos]);
+ }
+ void print_stack() {
+		for(int i=MaxSize-1;i>-1;i--)
+		//i=MaxSize-1 or i = top
+		{
+			System.out.print(stack[i]);
+		}
+	}
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the size of stack you want to create");
+		int size = sc.nextInt();
+		sc.nextLine();
+		BasicStack obj = new  BasicStack();
+		BasicStack min = new BasicStack();
+		obj.createStack(size);
+		min.createStack(size);
+		int ch;
+		do {
+			System.out.println("Enter the choice between 1 to 4");
+			ch= sc.nextInt();
+			switch(ch) {
+			case 1:
+				if(!obj.isFull()) {
+					System.out.println("Enter the element u want to push");
+					int num=sc.nextInt();
+					obj.push(num);
+				
+					if(min.isEmpty()) {
+						min.push(num);
+					}else
+						if(!min.isEmpty()) {
+							if(min.peek()>num) {
+								min.push(num);
+							}
+						}
+				}
+				break;
+			case 2:
+				if(!obj.isEmpty()) {
+					obj.pop();
+				if(!min.isEmpty()) {
+					if(min.peek()==obj.peek()) {
+						min.pop();
+					}
+				}
+				}
+				break;
+				case 3:
+					 System.out.println("Minimum element of stack is "+min.peek());
+				break;
+				default:
+					System.out.println("Enter a valid choice");
+			}
+		}while(ch!=0);
+
+	}
+
+}
+============================================================================================================================================================

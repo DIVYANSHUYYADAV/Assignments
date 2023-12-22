@@ -132,6 +132,29 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 </bean>
 </beans>
 ==========================================================================
+
+MAIN.JAVA
+=========
+package mypack;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main 
+{
+	public static void main(String[] args) 
+	{
+		 ApplicationContext ac=new ClassPathXmlApplicationContext("context.xml");
+	        CustomerDAO cd=(CustomerDAO)ac.getBean("customerDAO");
+	        Customer c1=new Customer();
+	        c1.setCustomerId(1);
+	        c1.setCustomerName("sachin");
+	        c1.setAddress("Mumbai");
+	        cd.insertCustomer(c1);	
+	        System.out.println("Done");
+	}
+}
+===========================================================================
 Pom.xml
 =======
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -182,32 +205,8 @@ Pom.xml
  </dependency> 
 </dependencies>
 </project>
-==============================================================
-MAIN.JAVA
-=========
-package mypack;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-public class Main 
-{
-	public static void main(String[] args) 
-	{
-		 ApplicationContext ac=new ClassPathXmlApplicationContext("context.xml");
-	        CustomerDAO cd=(CustomerDAO)ac.getBean("customerDAO");
-	        Customer c1=new Customer();
-	        c1.setCustomerId(1);
-	        c1.setCustomerName("sachin");
-	        c1.setAddress("Mumbai");
-	        cd.insertCustomer(c1);
-	        System.out.println("Done");
-	}
-}
 ============================================================================================================================================================
-
-
-
 
 
 
